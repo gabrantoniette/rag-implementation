@@ -20,7 +20,7 @@ export const EvalQuerySchema = z.object({
   query: z.string(),
   kind: z.string(),
   gold: z.array(z.object({ title: z.string(), section: z.string().optional() })),
-  /** Sports-related but not answerable from the corpus (used to calibrate the evidence gate). */
+  /** On the domain's topic but not answerable from the corpus (used to calibrate the evidence gate). */
   outOfCorpus: z.boolean().default(false),
   note: z.string().optional(),
 });
