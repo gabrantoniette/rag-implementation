@@ -3,6 +3,7 @@ import path from 'node:path';
 import {
   CorruptDocumentError,
   EmptyDocumentError,
+  EncryptedDocumentError,
   FileTooLargeError,
   UnsupportedFormatError,
 } from '../core/errors.js';
@@ -110,6 +111,9 @@ export class LoaderRegistry {
       throw new CorruptDocumentError(input.uri, 'missing %PDF- signature');
     }
     if (OFFICE_EXTENSIONS.has(input.extension) && !looksLikeZip(input.bytes)) {
+      // Password-protected OOXML files are stored inside an OLE compound file (D0 CF 11 E0).
+      if (startsWith(input.bytes, [0xd0, 0xcf, 0x11, 0xe0]))
+        throw new EncryptedDocumentError(input.uri);
       throw new CorruptDocumentError(input.uri, 'not a ZIP-based Office file');
     }
     const content = await loader.load(input, ctx);

@@ -2,6 +2,7 @@ import { csvLoader } from './csv.js';
 import { htmlLoader } from './html.js';
 import { jsonLoader } from './json.js';
 import { markdownLoader } from './markdown.js';
+import { officeLoader } from './office.js';
 import { pdfLoader } from './pdf.js';
 import { LoaderRegistry } from './registry.js';
 import { subtitleLoader } from './subtitle.js';
@@ -16,6 +17,7 @@ export const CORE_LOADERS: DocumentLoader[] = [
   jsonLoader,
   pdfLoader,
   subtitleLoader,
+  officeLoader,
 ];
 
 export function createRegistry(

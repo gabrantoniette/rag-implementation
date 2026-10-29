@@ -112,3 +112,8 @@ P3 acceptance check; any such addition is recorded below with the reason.
 - `scripts/tsx.mjs` runs every TypeScript entry point through tsx with `TMP`, `TEMP` and `TMPDIR` set to
   `.cache/tmp`, because tsx keeps a persistent transform cache in the OS temp folder by default.
   `vitest.config.ts` applies the same rule to the test runner.
+- **officeparser fallbacks.** officeparser 8.4 passed every P3 acceptance check (docx heading path and
+  footnotes, xlsx sheets with cached formula values, pptx slides with speaker notes, decompression limit,
+  corrupt file), so `mammoth` and `read-excel-file` were NOT added. The loader passes `fileType` from the
+  extension (magic bytes are checked first) because officeparser's own sniffing reported a minimal
+  OOXML package as a plain ZIP. Its limit error reads "ZIP uncompressed size limit exceeded (N bytes)".
