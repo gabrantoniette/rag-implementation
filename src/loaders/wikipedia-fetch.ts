@@ -5,11 +5,16 @@ import { APP_URL } from '../config/app-info.js';
 import { ConfigError, FetchBlockedError } from '../core/errors.js';
 import { WIKIPEDIA_EXTENSION } from './wikipedia.js';
 
+/** One corpus article. `topic` groups articles (the sports domain names it `sport`). */
 export const CorpusEntrySchema = z.object({
   title: z.string().min(1),
-  sport: z.string().min(1),
+  topic: z.string().min(1).optional(),
+  sport: z.string().min(1).optional(),
   reason: z.string().min(1),
 });
+
+export const topicOf = (e: { topic?: string | undefined; sport?: string | undefined }) =>
+  e.topic ?? e.sport ?? '';
 export const CorpusSchema = z.array(CorpusEntrySchema).min(1);
 export type CorpusEntry = z.infer<typeof CorpusEntrySchema>;
 

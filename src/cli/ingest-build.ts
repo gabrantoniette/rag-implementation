@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { PATHS } from '../core/paths.js';
-import { CorpusSchema } from '../loaders/wikipedia-fetch.js';
+import { CorpusSchema, topicOf } from '../loaders/wikipedia-fetch.js';
 import { WIKIPEDIA_EXTENSION } from '../loaders/wikipedia.js';
 import { createRag } from '../index.js';
 import { runCli } from './args.js';
@@ -52,7 +52,7 @@ runCli(async () => {
       const { created, result } = await rag.documents.upsert({
         source: { path: file },
         collection: rag.config.domain.collection,
-        metadata: { sport: entry.sport },
+        metadata: { topic: topicOf(entry) },
       });
       if (created) tally.created++;
       else tally[result.status]++;

@@ -1,0 +1,4 @@
+{"query": "When was the project started?", "intent": "lookup"}
+{"query": "Why does the process need an approval step?", "intent": "explain"}
+{"query": "Compare the old and the new pricing.", "intent": "compare"}
+{"query": "What happened in each release since 2020?", "intent": "timeline"}

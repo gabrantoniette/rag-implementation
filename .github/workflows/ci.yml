@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      # Skip onnxruntime-node's optional CUDA download; CPU binaries ship in the package.
+      ONNXRUNTIME_NODE_INSTALL: skip
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Cache models (Transformers.js, tesseract)
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/transformers
+            .cache/tesseract
+          key: models-${{ hashFiles('package-lock.json') }}
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      # Unit tests only: no Neo4j, no OpenRouter. CI=true skips the large captioning models.
+      - run: npm test

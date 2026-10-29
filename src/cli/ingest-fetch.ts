@@ -12,6 +12,7 @@ import {
   fetchArticle,
   rawPaths,
   saveArticle,
+  topicOf,
   wikimediaUserAgent,
 } from '../loaders/wikipedia-fetch.js';
 import { parseArgs, runCli } from './args.js';
@@ -68,7 +69,7 @@ runCli(async () => {
   for (const entry of corpus) {
     const file = saved.get(entry.title);
     if (!file) {
-      rows.push(`| ${entry.title} | ${entry.sport} | - | - | MISSING |`);
+      rows.push(`| ${entry.title} | ${topicOf(entry)} | - | - | MISSING |`);
       failures++;
       continue;
     }
@@ -78,14 +79,14 @@ runCli(async () => {
     const ok = words >= MIN_WORDS;
     if (!ok) failures++;
     rows.push(
-      `| ${entry.title} | ${entry.sport} | ${doc.metadata.revid ?? '-'} | ${words} | ${ok ? 'OK' : `< ${MIN_WORDS} words`} |`,
+      `| ${entry.title} | ${topicOf(entry)} | ${doc.metadata.revid ?? '-'} | ${words} | ${ok ? 'OK' : `< ${MIN_WORDS} words`} |`,
     );
   }
   process.stdout.write(
     [
       `Fetched ${fetched}, already present ${skipped}, articles ${corpus.length}`,
       '',
-      '| Title | Sport | revid | Words | Check |',
+      '| Title | Topic | revid | Words | Check |',
       '| --- | --- | --- | --- | --- |',
       ...rows,
       '',

@@ -1,0 +1,28 @@
+{role}
+
+TASK
+{task}
+Language: {language}. Tone: {tone}. Maximum length: {max_words} words.
+
+RULES
+{instructions}
+
+CITATION RULES
+{citation_rules}
+
+QUESTION TYPE: {intent}
+{intent_instructions}
+
+If the sources do not support an answer, start the Answer section with exactly: "{refusal_message}"
+
+OUTPUT FORMAT
+{format_example}
+
+CONVERSATION SO FAR
+{history}
+
+SOURCES
+{sources}
+
+QUESTION
+{question}
