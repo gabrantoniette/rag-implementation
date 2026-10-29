@@ -3,6 +3,7 @@ import { htmlLoader } from './html.js';
 import { imageLoader } from './image.js';
 import { jsonLoader } from './json.js';
 import { markdownLoader } from './markdown.js';
+import { mediaLoader } from './media.js';
 import { officeLoader } from './office.js';
 import { pdfLoader } from './pdf.js';
 import { LoaderRegistry } from './registry.js';
@@ -20,6 +21,7 @@ export const CORE_LOADERS: DocumentLoader[] = [
   subtitleLoader,
   officeLoader,
   imageLoader,
+  mediaLoader,
 ];
 
 export function createRegistry(

@@ -75,3 +75,14 @@ export async function solidPng(color: string, width = 320, height = 180): Promis
   ctx.fillRect(0, 0, width / 3, height);
   return new Uint8Array(await canvas.encode('png'));
 }
+
+/** Alternating stripes; a frame with a different layout than solidPng for dedup tests. */
+export async function stripesPng(width = 320, height = 180): Promise<Uint8Array> {
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext('2d');
+  for (let x = 0; x < width; x += 20) {
+    ctx.fillStyle = (x / 20) % 2 === 0 ? '#ffffff' : '#000000';
+    ctx.fillRect(x, 0, 20, height);
+  }
+  return new Uint8Array(await canvas.encode('png'));
+}

@@ -3,7 +3,7 @@ import type { Logger } from '../core/logger.js';
 import type { TokenCounter } from '../core/tokens.js';
 import type { MetadataValue, ParsedDocument, Section } from '../core/types.js';
 import type { ImageCaptioner, OcrEngine } from '../vision/types.js';
-import type { MediaTools } from '../vision/media-tools.js';
+import type { MediaTools, SpeechRecognizer } from '../vision/media-tools.js';
 
 export interface LoaderInput {
   bytes: Uint8Array;
@@ -24,7 +24,11 @@ export interface LoaderContext {
   logger: Logger;
   ocr?: OcrEngine;
   captioner?: ImageCaptioner;
+  /** ffmpeg wrapper; absent when ffmpeg is not installed. */
   media?: MediaTools;
+  asr?: SpeechRecognizer;
+  /** Keyframe analysis for video files (default true; --no-visual turns it off). */
+  visual?: boolean;
 }
 
 /** What a loader returns; the registry adds id and contentHash. */
