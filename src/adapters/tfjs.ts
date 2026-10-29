@@ -119,6 +119,27 @@ const dense = (
 export interface IntentExample {
   embedding: number[];
   intent: Intent;
+  query?: string;
+}
+
+/** Stratified split per class (seeded): the first valShare of each shuffled class is validation. */
+export function splitExamples<T extends { intent: Intent }>(
+  examples: T[],
+  seed: number,
+  valShare = 0.2,
+) {
+  const train: T[] = [];
+  const val: T[] = [];
+  for (const intent of INTENTS) {
+    const group = shuffled(
+      examples.filter((e) => e.intent === intent),
+      seed,
+    );
+    const cut = Math.round(group.length * valShare);
+    val.push(...group.slice(0, cut));
+    train.push(...group.slice(cut));
+  }
+  return { train, val };
 }
 
 export interface TrainReport {
@@ -158,17 +179,7 @@ export async function trainIntentModel(
 ): Promise<{ model: tf.LayersModel; report: TrainReport }> {
   await tfReady();
   const seed = options.seed ?? 7;
-  const train: IntentExample[] = [];
-  const val: IntentExample[] = [];
-  for (const intent of INTENTS) {
-    const group = shuffled(
-      examples.filter((e) => e.intent === intent),
-      seed,
-    );
-    const cut = Math.round(group.length * (options.valShare ?? 0.2));
-    val.push(...group.slice(0, cut));
-    train.push(...group.slice(cut));
-  }
+  const { train, val } = splitExamples(examples, seed, options.valShare ?? 0.2);
   const order = shuffled(train, seed + 1);
   const model = buildIntentModel(order[0]!.embedding.length, seed);
   const label = (e: IntentExample) => INTENTS.indexOf(e.intent);

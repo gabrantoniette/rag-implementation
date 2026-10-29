@@ -1,0 +1,19 @@
+{
+  "trainSize": 130,
+  "valSize": 32,
+  "trainAccuracy": 1,
+  "valAccuracy": 0.65625,
+  "epochs": 60,
+  "ruleValAccuracy": 0.65625,
+  "seeds": 162,
+  "perClass": {
+    "lookup": 42,
+    "explain": 42,
+    "compare": 38,
+    "timeline": 40
+  },
+  "seed": 7,
+  "embeddingModel": "Xenova/bge-small-en-v1.5",
+  "default": "rules",
+  "trainedAt": "2026-10-29T19:22:29.602Z"
+}

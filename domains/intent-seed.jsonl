@@ -1,0 +1,162 @@
+{"query": "When was the first FIFA World Cup held?", "intent": "lookup"}
+{"query": "Which country hosted the 2014 World Cup?", "intent": "lookup"}
+{"query": "How many Ballon d'Or awards has Lionel Messi won?", "intent": "lookup"}
+{"query": "What is the capacity of the Santiago Bernabeu stadium?", "intent": "lookup"}
+{"query": "Who is the all-time top scorer of the UEFA Champions League?", "intent": "lookup"}
+{"query": "In which city was Pele born?", "intent": "lookup"}
+{"query": "What year was FC Barcelona founded?", "intent": "lookup"}
+{"query": "Name the club where Cristiano Ronaldo started his professional career.", "intent": "lookup"}
+{"query": "Who invented basketball?", "intent": "lookup"}
+{"query": "How many players does a basketball team have on the court?", "intent": "lookup"}
+{"query": "Which team drafted LeBron James?", "intent": "lookup"}
+{"query": "What number did Kobe Bryant wear at the end of his career?", "intent": "lookup"}
+{"query": "Where do the Boston Celtics play their home games?", "intent": "lookup"}
+{"query": "How many championships did Michael Jordan win with the Bulls?", "intent": "lookup"}
+{"query": "Who holds the record for most Wimbledon singles titles among men?", "intent": "lookup"}
+{"query": "On what surface is the French Open played?", "intent": "lookup"}
+{"query": "How many Grand Slam singles titles did Serena Williams win?", "intent": "lookup"}
+{"query": "Where was Novak Djokovic born?", "intent": "lookup"}
+{"query": "What is Rafael Nadal's nickname on clay?", "intent": "lookup"}
+{"query": "Which tournament is played at Roland Garros?", "intent": "lookup"}
+{"query": "How many world championships has Lewis Hamilton won?", "intent": "lookup"}
+{"query": "Which team did Michael Schumacher drive for when he won his first title?", "intent": "lookup"}
+{"query": "Where is the Monaco Grand Prix held?", "intent": "lookup"}
+{"query": "What nationality is Max Verstappen?", "intent": "lookup"}
+{"query": "In what year did Ayrton Senna die?", "intent": "lookup"}
+{"query": "What colour are Ferrari's Formula One cars traditionally?", "intent": "lookup"}
+{"query": "What is Usain Bolt's 100 metres world record time?", "intent": "lookup"}
+{"query": "How long is a marathon?", "intent": "lookup"}
+{"query": "Where were the 1936 Summer Olympics held?", "intent": "lookup"}
+{"query": "How many gold medals did Carl Lewis win at the Olympics?", "intent": "lookup"}
+{"query": "Who founded the modern Olympic Games?", "intent": "lookup"}
+{"query": "Which city hosted the first modern Olympics?", "intent": "lookup"}
+{"query": "Tell me the name of Real Madrid's home ground.", "intent": "lookup"}
+{"query": "I need the year Jesse Owens won four gold medals.", "intent": "lookup"}
+{"query": "Who coached the Los Angeles Lakers during the Shaq and Kobe era?", "intent": "lookup"}
+{"query": "Which driver has the most pole positions?", "intent": "lookup"}
+{"query": "What does NBA stand for?", "intent": "lookup"}
+{"query": "Height of a basketball hoop?", "intent": "lookup"}
+{"query": "Federer's birthplace", "intent": "lookup"}
+{"query": "Which club did Messi join after leaving Barcelona?", "intent": "lookup"}
+{"query": "Is the Wimbledon final played on grass?", "intent": "lookup"}
+{"query": "What is the official ball size for adult football matches?", "intent": "lookup"}
+{"query": "Why is the offside rule important in football?", "intent": "explain"}
+{"query": "How does the UEFA Champions League group stage work?", "intent": "explain"}
+{"query": "Explain why Barcelona's youth academy became so famous.", "intent": "explain"}
+{"query": "What made Pele such an influential player?", "intent": "explain"}
+{"query": "How is a FIFA World Cup host country chosen?", "intent": "explain"}
+{"query": "Describe the playing style of Lionel Messi.", "intent": "explain"}
+{"query": "Why did Cristiano Ronaldo leave Manchester United for Real Madrid?", "intent": "explain"}
+{"query": "How does the NBA draft lottery work?", "intent": "explain"}
+{"query": "What is the role of a point guard?", "intent": "explain"}
+{"query": "Why is Michael Jordan considered so important to the NBA's popularity?", "intent": "explain"}
+{"query": "How did James Naismith come up with basketball?", "intent": "explain"}
+{"query": "What is the significance of the Lakers and Celtics rivalry?", "intent": "explain"}
+{"query": "How does the shot clock change the game?", "intent": "explain"}
+{"query": "Explain the scoring system in tennis.", "intent": "explain"}
+{"query": "Why is clay considered a slow surface?", "intent": "explain"}
+{"query": "How does a tiebreak work in a tennis set?", "intent": "explain"}
+{"query": "What makes Novak Djokovic so strong on return of serve?", "intent": "explain"}
+{"query": "Why did Serena Williams have such an impact on women's tennis?", "intent": "explain"}
+{"query": "How are Grand Slam tournaments different from other tennis events?", "intent": "explain"}
+{"query": "How does the Formula One points system work?", "intent": "explain"}
+{"query": "Why is overtaking so hard at Monaco?", "intent": "explain"}
+{"query": "Explain the role of aerodynamics in Formula One cars.", "intent": "explain"}
+{"query": "What made Mercedes so dominant in the turbo hybrid era?", "intent": "explain"}
+{"query": "Describe how a Formula One race weekend is structured.", "intent": "explain"}
+{"query": "Why was Ayrton Senna regarded as exceptional in wet conditions?", "intent": "explain"}
+{"query": "How do pit stops influence race strategy?", "intent": "explain"}
+{"query": "How does a sprinter reach top speed in the 100 metres?", "intent": "explain"}
+{"query": "Why did Jesse Owens' victories in Berlin matter politically?", "intent": "explain"}
+{"query": "What is the purpose of the Olympic Charter?", "intent": "explain"}
+{"query": "How are track and field events organised at the Olympics?", "intent": "explain"}
+{"query": "Explain why the marathon distance is 42.195 km.", "intent": "explain"}
+{"query": "What does the International Olympic Committee do?", "intent": "explain"}
+{"query": "Tell me what makes Usain Bolt's running technique special.", "intent": "explain"}
+{"query": "Help me understand the away goals rule.", "intent": "explain"}
+{"query": "What is the reasoning behind the salary cap in the NBA?", "intent": "explain"}
+{"query": "Walk me through how doping controls work in athletics.", "intent": "explain"}
+{"query": "Can you explain what a hat-trick is?", "intent": "explain"}
+{"query": "What is the impact of altitude on sprint times?", "intent": "explain"}
+{"query": "How did Real Madrid become so successful in Europe?", "intent": "explain"}
+{"query": "Why do Formula One teams use different tyre compounds?", "intent": "explain"}
+{"query": "What role does the captain play in a football team?", "intent": "explain"}
+{"query": "How do the Olympics decide which sports are included?", "intent": "explain"}
+{"query": "Compare Lionel Messi and Cristiano Ronaldo.", "intent": "compare"}
+{"query": "Who has won more Champions League titles, Real Madrid or Barcelona?", "intent": "compare"}
+{"query": "How does Pele's World Cup record compare with Messi's?", "intent": "compare"}
+{"query": "What is the difference between the World Cup and the Champions League?", "intent": "compare"}
+{"query": "Messi vs Ronaldo: who scored more goals?", "intent": "compare"}
+{"query": "Is Barcelona's stadium bigger than Real Madrid's?", "intent": "compare"}
+{"query": "Michael Jordan versus LeBron James: who had the better career?", "intent": "compare"}
+{"query": "Compare the Lakers and the Celtics in championships won.", "intent": "compare"}
+{"query": "How do Kobe Bryant and Michael Jordan differ as scorers?", "intent": "compare"}
+{"query": "Which has more fans, the NBA or the Champions League?", "intent": "compare"}
+{"query": "What are the differences between NBA and international basketball rules?", "intent": "compare"}
+{"query": "Was LeBron James or Kobe Bryant more decorated?", "intent": "compare"}
+{"query": "Compare Federer, Nadal and Djokovic in Grand Slam titles.", "intent": "compare"}
+{"query": "How does playing on grass differ from playing on clay?", "intent": "compare"}
+{"query": "Who was better at Wimbledon, Federer or Djokovic?", "intent": "compare"}
+{"query": "Serena Williams compared with Roger Federer in total majors", "intent": "compare"}
+{"query": "Is the French Open harder to win than Wimbledon?", "intent": "compare"}
+{"query": "Nadal or Djokovic: whose head-to-head record is stronger?", "intent": "compare"}
+{"query": "Compare Lewis Hamilton and Michael Schumacher.", "intent": "compare"}
+{"query": "How does Ferrari's record compare with Mercedes'?", "intent": "compare"}
+{"query": "Who won more races, Senna or Schumacher?", "intent": "compare"}
+{"query": "Verstappen versus Hamilton in their 2021 title fight", "intent": "compare"}
+{"query": "What separates the Monaco Grand Prix from other races on the calendar?", "intent": "compare"}
+{"query": "Hamilton's pole positions against Senna's", "intent": "compare"}
+{"query": "Compare Usain Bolt and Carl Lewis.", "intent": "compare"}
+{"query": "Who was faster over 100 metres, Bolt or Lewis?", "intent": "compare"}
+{"query": "How do the Summer and Winter Olympics differ?", "intent": "compare"}
+{"query": "Jesse Owens and Carl Lewis both won four golds: how were their Games different?", "intent": "compare"}
+{"query": "Marathon versus 100 metres: what different abilities do they demand?", "intent": "compare"}
+{"query": "Is a sprint or a marathon more physically demanding?", "intent": "compare"}
+{"query": "Which is older, the Olympic marathon or the FIFA World Cup?", "intent": "compare"}
+{"query": "Football and basketball: which sport has more players per team?", "intent": "compare"}
+{"query": "Similarities between Messi's and Pele's early careers", "intent": "compare"}
+{"query": "Rank Federer and Nadal on clay courts.", "intent": "compare"}
+{"query": "Did Schumacher or Hamilton have more dominant seasons?", "intent": "compare"}
+{"query": "How do the Celtics' and Lakers' title counts stack up?", "intent": "compare"}
+{"query": "Contrast the careers of Ayrton Senna and Max Verstappen.", "intent": "compare"}
+{"query": "Which athlete won more Olympic medals, Bolt or Owens?", "intent": "compare"}
+{"query": "Give me the history of the FIFA World Cup.", "intent": "timeline"}
+{"query": "Trace Lionel Messi's career from Rosario to Paris.", "intent": "timeline"}
+{"query": "What happened in each of Cristiano Ronaldo's spells at Manchester United?", "intent": "timeline"}
+{"query": "List Real Madrid's European Cup wins in order.", "intent": "timeline"}
+{"query": "How has the Champions League format changed over the years?", "intent": "timeline"}
+{"query": "Chronology of Barcelona's major trophies", "intent": "timeline"}
+{"query": "Pele's career year by year", "intent": "timeline"}
+{"query": "How did basketball evolve from 1891 to today?", "intent": "timeline"}
+{"query": "Timeline of Michael Jordan's championships and retirements", "intent": "timeline"}
+{"query": "Walk me through LeBron James's teams in order.", "intent": "timeline"}
+{"query": "What were the key moments of Kobe Bryant's career?", "intent": "timeline"}
+{"query": "History of the NBA Finals since 1947", "intent": "timeline"}
+{"query": "How did the Celtics build their dynasty in the 1960s?", "intent": "timeline"}
+{"query": "Sequence of Roger Federer's Wimbledon titles", "intent": "timeline"}
+{"query": "When did Rafael Nadal win each French Open?", "intent": "timeline"}
+{"query": "Trace the evolution of tennis from the 19th century.", "intent": "timeline"}
+{"query": "Novak Djokovic's Grand Slam wins in chronological order", "intent": "timeline"}
+{"query": "What happened at Wimbledon over the decades?", "intent": "timeline"}
+{"query": "Serena Williams' career milestones by year", "intent": "timeline"}
+{"query": "How did Formula One change from 1950 to now?", "intent": "timeline"}
+{"query": "Lewis Hamilton's championships in order", "intent": "timeline"}
+{"query": "Michael Schumacher's career from Jordan to Mercedes", "intent": "timeline"}
+{"query": "History of Scuderia Ferrari in Formula One", "intent": "timeline"}
+{"query": "Ayrton Senna's seasons with McLaren, one by one", "intent": "timeline"}
+{"query": "When did Mercedes return to Formula One and what followed?", "intent": "timeline"}
+{"query": "Max Verstappen's rise from his debut to his titles", "intent": "timeline"}
+{"query": "History of the Monaco Grand Prix since its first race", "intent": "timeline"}
+{"query": "Usain Bolt's Olympic golds from Beijing to Rio", "intent": "timeline"}
+{"query": "How has the 100 metres world record progressed over time?", "intent": "timeline"}
+{"query": "Timeline of the modern Olympic Games", "intent": "timeline"}
+{"query": "What happened at each Olympics Carl Lewis competed in?", "intent": "timeline"}
+{"query": "Jesse Owens' life before and after Berlin 1936", "intent": "timeline"}
+{"query": "How did the marathon develop from 1896 onwards?", "intent": "timeline"}
+{"query": "Olympic host cities in order since 1896", "intent": "timeline"}
+{"query": "Order of events in the 2021 Formula One title decider", "intent": "timeline"}
+{"query": "Which years did the Lakers win titles?", "intent": "timeline"}
+{"query": "Step by step, how did Messi's time at Barcelona end?", "intent": "timeline"}
+{"query": "From amateur to professional: the history of athletics", "intent": "timeline"}
+{"query": "Recount the major rule changes in football since 1863.", "intent": "timeline"}
+{"query": "Before and after the Bosman ruling, how did transfers change?", "intent": "timeline"}
