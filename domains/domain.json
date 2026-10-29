@@ -1,0 +1,9 @@
+{
+  "name": "sports",
+  "collection": "sports",
+  "language": "en",
+  "entityExtraction": {
+    "default": "ner",
+    "byFormat": { "wikipedia-html": "wikilink" }
+  }
+}

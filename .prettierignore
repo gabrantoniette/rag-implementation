@@ -1,0 +1,11 @@
+node_modules/
+.cache/
+.neo4j-data/
+data/
+models/
+package-lock.json
+prompts/
+docs/specs/
+domains/prompts/
+docs/evidence/
+docs/project-record/

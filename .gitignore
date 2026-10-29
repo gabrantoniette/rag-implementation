@@ -1,0 +1,26 @@
+# Secrets
+.env
+
+# Dependencies and caches (models, npm, tsx, tesseract, frames)
+node_modules/
+.cache/
+
+# Neo4j bind mount
+.neo4j-data/
+
+# Runtime data
+data/raw/
+data/cache/
+data/usage.json
+data/feedback.jsonl
+data/last-ask.json
+
+# Logs
+logs/
+*.log
+
+# User-provided local media for optional checks
+tests/assets/user/
+
+# Tooling
+coverage/
