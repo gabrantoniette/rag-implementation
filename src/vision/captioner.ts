@@ -139,3 +139,27 @@ export async function createCaptioner(
   logger.warn('No image captioner could run; image descriptions are disabled (OCR still works)');
   return null;
 }
+
+/**
+ * Picks the captioner on first use (the first real image doubles as the probe), so commands that
+ * never see an image never download a vision model.
+ */
+export class LazyCaptioner implements ImageCaptioner {
+  private inner: Promise<ImageCaptioner | null> | null = null;
+  constructor(private readonly logger: Logger) {}
+
+  get name(): string {
+    return 'auto (Florence-2, fallback ViT-GPT2)';
+  }
+
+  async caption(image: Uint8Array): Promise<string> {
+    this.inner ??= createCaptioner(this.logger, image);
+    const captioner = await this.inner;
+    return captioner ? captioner.caption(image) : '';
+  }
+
+  async close(): Promise<void> {
+    if (this.inner) await (await this.inner)?.close();
+    this.inner = null;
+  }
+}
