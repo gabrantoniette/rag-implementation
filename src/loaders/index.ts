@@ -9,6 +9,7 @@ import { pdfLoader } from './pdf.js';
 import { LoaderRegistry } from './registry.js';
 import { subtitleLoader } from './subtitle.js';
 import { textLoader } from './text.js';
+import { wikipediaLoader } from './wikipedia.js';
 import type { DocumentLoader } from './types.js';
 
 export const CORE_LOADERS: DocumentLoader[] = [
@@ -22,6 +23,7 @@ export const CORE_LOADERS: DocumentLoader[] = [
   officeLoader,
   imageLoader,
   mediaLoader,
+  wikipediaLoader,
 ];
 
 export function createRegistry(

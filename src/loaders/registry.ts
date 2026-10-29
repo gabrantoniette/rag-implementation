@@ -120,10 +120,11 @@ export class LoaderRegistry {
     const sections = content.sections.filter((s) => s.text.trim().length > 0);
     if (sections.length === 0) throw new EmptyDocumentError(input.uri);
     const title = input.title ?? content.title;
+    const uri = content.uri ? normalizeUri(content.uri) : input.uri;
     return {
-      id: defaultDocumentId(input.uri),
+      id: defaultDocumentId(uri),
       title,
-      uri: input.uri,
+      uri,
       format: content.format,
       contentHash: contentHashOf({ title, sections }),
       sections,

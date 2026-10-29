@@ -1,0 +1,206 @@
+[
+  {
+    "title": "Association football",
+    "sport": "football",
+    "reason": "Sport overview: rules, history and governing bodies; hub for the other football articles."
+  },
+  {
+    "title": "FIFA World Cup",
+    "sport": "football",
+    "reason": "Major competition; links national teams, hosts and star players."
+  },
+  {
+    "title": "UEFA Champions League",
+    "sport": "football",
+    "reason": "Major club competition; links Real Madrid, Barcelona, Messi and Ronaldo."
+  },
+  {
+    "title": "Lionel Messi",
+    "sport": "football",
+    "reason": "Notable athlete; FC Barcelona and World Cup links enable multi-hop questions."
+  },
+  {
+    "title": "Cristiano Ronaldo",
+    "sport": "football",
+    "reason": "Notable athlete; comparison partner for Messi, linked to Real Madrid."
+  },
+  {
+    "title": "Pelé",
+    "sport": "football",
+    "reason": "Historic athlete; three World Cup titles connect him to the FIFA World Cup article."
+  },
+  {
+    "title": "Real Madrid CF",
+    "sport": "football",
+    "reason": "Notable team; Champions League record holder, linked to Ronaldo."
+  },
+  {
+    "title": "FC Barcelona",
+    "sport": "football",
+    "reason": "Notable team; rival of Real Madrid and Messi's first club."
+  },
+
+  {
+    "title": "Basketball",
+    "sport": "basketball",
+    "reason": "Sport overview: invention, rules and leagues."
+  },
+  {
+    "title": "National Basketball Association",
+    "sport": "basketball",
+    "reason": "Major league; links franchises, players and the Finals."
+  },
+  {
+    "title": "NBA Finals",
+    "sport": "basketball",
+    "reason": "Major competition; championship history links teams and players."
+  },
+  {
+    "title": "Michael Jordan",
+    "sport": "basketball",
+    "reason": "Notable athlete; comparison partner for LeBron James."
+  },
+  {
+    "title": "LeBron James",
+    "sport": "basketball",
+    "reason": "Notable athlete; linked to the Lakers and many Finals."
+  },
+  {
+    "title": "Kobe Bryant",
+    "sport": "basketball",
+    "reason": "Notable athlete; whole career with the Los Angeles Lakers."
+  },
+  {
+    "title": "Los Angeles Lakers",
+    "sport": "basketball",
+    "reason": "Notable team; linked to Bryant, James and the Celtics rivalry."
+  },
+  {
+    "title": "Boston Celtics",
+    "sport": "basketball",
+    "reason": "Notable team; record championships and the Lakers rivalry."
+  },
+
+  {
+    "title": "Tennis",
+    "sport": "tennis",
+    "reason": "Sport overview: scoring, surfaces and the major tournaments."
+  },
+  {
+    "title": "Grand Slam (tennis)",
+    "sport": "tennis",
+    "reason": "Competition structure linking the four majors and record holders."
+  },
+  {
+    "title": "Wimbledon Championships",
+    "sport": "tennis",
+    "reason": "Major competition on grass; linked to Federer, Djokovic and Serena Williams."
+  },
+  {
+    "title": "French Open",
+    "sport": "tennis",
+    "reason": "Major competition on clay; linked to Nadal's record."
+  },
+  {
+    "title": "Roger Federer",
+    "sport": "tennis",
+    "reason": "Notable athlete; grass-court records support paraphrase questions."
+  },
+  {
+    "title": "Rafael Nadal",
+    "sport": "tennis",
+    "reason": "Notable athlete; French Open record and rivalry with Federer."
+  },
+  {
+    "title": "Novak Djokovic",
+    "sport": "tennis",
+    "reason": "Notable athlete; comparison partner for Federer and Nadal."
+  },
+  {
+    "title": "Serena Williams",
+    "sport": "tennis",
+    "reason": "Notable athlete; women's Grand Slam records."
+  },
+
+  {
+    "title": "Formula One",
+    "sport": "formula-one",
+    "reason": "Sport overview: championship, rules and teams."
+  },
+  {
+    "title": "Monaco Grand Prix",
+    "sport": "formula-one",
+    "reason": "Major race; linked to Senna's record and the teams."
+  },
+  {
+    "title": "Scuderia Ferrari",
+    "sport": "formula-one",
+    "reason": "Notable team; linked to Schumacher and Hamilton."
+  },
+  {
+    "title": "Mercedes-Benz in Formula One",
+    "sport": "formula-one",
+    "reason": "Notable team; Hamilton's championship era."
+  },
+  {
+    "title": "Lewis Hamilton",
+    "sport": "formula-one",
+    "reason": "Notable athlete; comparison partner for Schumacher."
+  },
+  {
+    "title": "Michael Schumacher",
+    "sport": "formula-one",
+    "reason": "Notable athlete; Ferrari era and championship records."
+  },
+  {
+    "title": "Ayrton Senna",
+    "sport": "formula-one",
+    "reason": "Historic athlete; Monaco wins and rivalry history."
+  },
+  {
+    "title": "Max Verstappen",
+    "sport": "formula-one",
+    "reason": "Notable athlete; recent championships."
+  },
+
+  {
+    "title": "Olympic Games",
+    "sport": "athletics-olympics",
+    "reason": "Competition overview linking all sports in the corpus."
+  },
+  {
+    "title": "Summer Olympic Games",
+    "sport": "athletics-olympics",
+    "reason": "Competition history, hosts and programme."
+  },
+  {
+    "title": "Athletics (sport)",
+    "sport": "athletics-olympics",
+    "reason": "Sport overview: track, field and road events."
+  },
+  {
+    "title": "100 metres",
+    "sport": "athletics-olympics",
+    "reason": "Event article with records linked to Bolt, Lewis and Owens."
+  },
+  {
+    "title": "Marathon",
+    "sport": "athletics-olympics",
+    "reason": "Event article with history and Olympic links."
+  },
+  {
+    "title": "Usain Bolt",
+    "sport": "athletics-olympics",
+    "reason": "Notable athlete; sprint world records and Olympic titles."
+  },
+  {
+    "title": "Carl Lewis",
+    "sport": "athletics-olympics",
+    "reason": "Notable athlete; comparison partner for Jesse Owens."
+  },
+  {
+    "title": "Jesse Owens",
+    "sport": "athletics-olympics",
+    "reason": "Historic athlete; 1936 Olympics."
+  }
+]

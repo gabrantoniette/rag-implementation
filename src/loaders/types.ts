@@ -38,6 +38,8 @@ export interface LoadedContent {
   sections: Section[];
   metadata?: Record<string, MetadataValue>;
   links?: string[];
+  /** Canonical source location when it differs from the input (a cached Wikipedia article). */
+  uri?: string;
 }
 
 export interface DocumentLoader {
