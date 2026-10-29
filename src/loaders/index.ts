@@ -1,5 +1,6 @@
 import { csvLoader } from './csv.js';
 import { htmlLoader } from './html.js';
+import { imageLoader } from './image.js';
 import { jsonLoader } from './json.js';
 import { markdownLoader } from './markdown.js';
 import { officeLoader } from './office.js';
@@ -18,6 +19,7 @@ export const CORE_LOADERS: DocumentLoader[] = [
   pdfLoader,
   subtitleLoader,
   officeLoader,
+  imageLoader,
 ];
 
 export function createRegistry(
