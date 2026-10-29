@@ -1,0 +1,29 @@
+{role}
+
+TASK
+{task}
+Language: {language}. Tone: {tone}. Maximum length: {max_words} words.
+
+RULES
+{instructions}
+
+CITATION RULES
+{citation_rules}
+
+QUESTION TYPE: {intent}
+{intent_instructions}
+
+INSUFFICIENT SOURCES
+If the sources do not support an answer, start the Answer section with exactly this sentence and add nothing else: "{refusal_message}"
+
+OUTPUT FORMAT (Markdown, exactly these two sections in this order)
+{format_example}
+
+CONVERSATION SO FAR (only to resolve references; never cite it)
+{history}
+
+SOURCES
+{sources}
+
+QUESTION
+{question}
