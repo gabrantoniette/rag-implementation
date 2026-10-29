@@ -97,8 +97,10 @@ P3 acceptance check; any such addition is recorded below with the reason.
 - **unpdf 2.0.** `extractText(data, { mergePages: false })` returns `{ totalPages, text: string[] }`;
   `renderPageAsImage(data, page, { canvasImport: () => import('@napi-rs/canvas'), scale: 2 })` returns
   PNG bytes. Peer dependency `@napi-rs/canvas ^0.1.69 || ^1.0.0`.
-- **csv-parse 7.** Options `columns`, `skip_empty_lines`, `bom`, `relax_column_count` exist; behaviour of
-  `relax_column_count` is checked by a unit test.
+- **csv-parse 7.** Options `columns`, `skip_empty_lines`, `bom`, `relax_column_count` exist. The context7
+  autodocs describe `relax_column_count` as discarding mismatched records; a local run on 2026-10-29 showed
+  that it KEEPS short rows (missing columns absent) and drops fields beyond the header, with
+  `info.invalid_field_length` counting them. The CSV loader relies on the observed behaviour.
 
 ## Install notes
 
