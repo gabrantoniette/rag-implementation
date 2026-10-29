@@ -86,3 +86,29 @@ export async function stripesPng(width = 320, height = 180): Promise<Uint8Array>
   }
   return new Uint8Array(await canvas.encode('png'));
 }
+
+/** 24-bit BMP encoder (canvas cannot encode BMP), for the image-format fixture. */
+export function encodeBmp(width: number, height: number, rgba: Uint8ClampedArray): Uint8Array {
+  const rowSize = Math.ceil((width * 3) / 4) * 4;
+  const size = 54 + rowSize * height;
+  const buf = Buffer.alloc(size);
+  buf.write('BM', 0, 'latin1');
+  buf.writeUInt32LE(size, 2);
+  buf.writeUInt32LE(54, 10);
+  buf.writeUInt32LE(40, 14);
+  buf.writeInt32LE(width, 18);
+  buf.writeInt32LE(height, 22);
+  buf.writeUInt16LE(1, 26);
+  buf.writeUInt16LE(24, 28);
+  buf.writeUInt32LE(rowSize * height, 34);
+  for (let y = 0; y < height; y++) {
+    const row = 54 + (height - 1 - y) * rowSize; // bottom-up rows
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4;
+      buf[row + x * 3] = rgba[i + 2]!;
+      buf[row + x * 3 + 1] = rgba[i + 1]!;
+      buf[row + x * 3 + 2] = rgba[i]!;
+    }
+  }
+  return new Uint8Array(buf);
+}

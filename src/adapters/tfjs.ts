@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import * as tf from '@tensorflow/tfjs';
 import type { IntentClassifier, IntentPrediction, Reranker } from '../core/ports.js';
+import { seededRandom, shuffled } from '../core/random.js';
 import { INTENTS, type Intent } from '../core/types.js';
 
 let backendReady: Promise<boolean> | null = null;
@@ -77,29 +78,7 @@ export function nextVersion(root: string): number {
   return n;
 }
 
-// ---------- deterministic helpers ----------
-
-/** Mulberry32: seeded PRNG so splits and shuffles are reproducible. */
-export function seededRandom(seed: number): () => number {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-export function shuffled<T>(items: T[], seed: number): T[] {
-  const rand = seededRandom(seed);
-  const out = [...items];
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    [out[i], out[j]] = [out[j]!, out[i]!];
-  }
-  return out;
-}
+export { seededRandom, shuffled };
 
 const dense = (
   units: number,
