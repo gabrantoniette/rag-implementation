@@ -24,3 +24,6 @@ tests/assets/user/
 
 # Tooling
 coverage/
+
+# Local design-lint tool state
+.impeccable/

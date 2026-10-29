@@ -21,3 +21,61 @@ export function cosine(a: readonly number[], b: readonly number[]): number {
   const nb = Math.sqrt(dot(b, b));
   return na === 0 || nb === 0 ? 0 : dot(a, b) / (na * nb);
 }
+
+export interface EntityInput {
+  /** Chunk text (header included). */
+  text: string;
+  /** Sections of the chunk's document (Wikipedia links live here). */
+  sections: import('./types.js').Section[];
+}
+
+/** Finds the entity names a chunk mentions. Names are the graph's Entity keys. */
+export interface EntityExtractor {
+  readonly name: string;
+  extract(input: EntityInput): Promise<string[]>;
+  close(): Promise<void>;
+}
+
+/** Learning-to-rank over feature rows (one row per candidate, see core/features.ts). */
+export interface Reranker {
+  readonly name: string;
+  /** Relevance in [0, 1] per row, in input order. */
+  score(features: number[][]): Promise<number[]>;
+}
+
+export interface IntentPrediction {
+  intent: import('./types.js').Intent;
+  confidence: number;
+  source: string;
+}
+
+export interface IntentClassifier {
+  readonly name: string;
+  classify(question: string, embedding: number[]): Promise<IntentPrediction>;
+}
+
+export interface ChatMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
+
+export interface LlmRequest {
+  messages: ChatMessage[];
+  temperature: number;
+  topP: number;
+  maxTokens: number;
+  /** Skip the development response cache (the evidence command always does). */
+  bypassCache?: boolean;
+}
+
+export interface LlmResponse {
+  text: string;
+  model: string;
+  usage?: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
+  cached: boolean;
+}
+
+/** Text generation. Only free OpenRouter models are allowed in the real client. */
+export interface LlmClient {
+  complete(request: LlmRequest): Promise<LlmResponse>;
+}
