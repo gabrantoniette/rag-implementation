@@ -3,6 +3,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import { writeFormatFixtures } from '../../tests/helpers/format-fixtures.js';
 import type { ChainState } from '../core/chain.js';
+import { evidenceCriteria } from '../core/evaluation.js';
 import { formatLocator } from '../core/locator.js';
 import { PATHS } from '../core/paths.js';
 import { contentTerms } from '../core/text.js';
@@ -95,24 +96,33 @@ async function live(rag: RagInstance, questions: Question[]) {
   const json = [];
   for (const q of questions) {
     const start = performance.now();
-    const result = await rag.ask(q.question, { mode: 'full', bypassCache: true });
+    let result: Awaited<ReturnType<RagInstance['ask']>>;
+    try {
+      result = await rag.ask(q.question, { mode: 'full', bypassCache: true });
+    } catch (error) {
+      // One provider error (e.g. an upstream content block) fails this question, not the whole run.
+      const message = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+      sections.push(`## ${q.id}: ${q.question} - FAIL`, '', `Error: ${message}`, '');
+      json.push({ ...q, pass: false, criteria: { error: false }, error: message });
+      continue;
+    }
     const latencyMs = Math.round(performance.now() - start);
     const s = result.state;
     const v = s.verification;
-    const answer = (s.rawAnswer ?? s.answer ?? '').toLowerCase();
-    const facts = q.expected_facts.map((f) =>
-      f.match.every((m) => answer.includes(m.toLowerCase())),
+    const {
+      criteria,
+      factsFound: facts,
+      pass,
+    } = evidenceCriteria(
+      q,
+      {
+        refused: result.refused,
+        rawAnswer: s.rawAnswer ?? s.answer ?? '',
+        citationCount: s.citations.length,
+        ...(v ? { verification: v } : {}),
+      },
+      rag.config.parameters.verification.groundingPassThreshold,
     );
-    const criteria = q.must_refuse
-      ? { refused: result.refused }
-      : {
-          atLeastOneCitation: s.citations.length >= 1,
-          allCitationsExist: !!v && v.invalidCitations.length === 0,
-          grounding80:
-            !!v && v.groundingScore >= rag.config.parameters.verification.groundingPassThreshold,
-          expectedFacts: facts.every(Boolean),
-        };
-    const pass = Object.values(criteria).every(Boolean);
     sections.push(
       `## ${q.id}: ${q.question} - ${pass ? 'PASS' : 'FAIL'}`,
       '',

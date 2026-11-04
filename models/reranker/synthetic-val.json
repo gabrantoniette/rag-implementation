@@ -1,0 +1,362 @@
+[
+  {
+    "id": "syn:Rafael Nadal:Player profile > Playing style",
+    "query": "Rafael Nadal Playing style",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Rafael Nadal",
+        "section": "Player profile > Playing style"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Tennis:Shots > Grip",
+    "query": "Tennis Grip",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Tennis",
+        "section": "Shots > Grip"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Novak Djokovic:Career > 2000s > 2008: First Major title, Olympic Bronze and ATP Finals title",
+    "query": "Novak Djokovic 2008: First Major title, Olympic Bronze and ATP Finals title",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Novak Djokovic",
+        "section": "Career > 2000s > 2008: First Major title, Olympic Bronze and ATP Finals title"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Novak Djokovic:Off the court > In popular culture",
+    "query": "Novak Djokovic In popular culture",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Novak Djokovic",
+        "section": "Off the court > In popular culture"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Lionel Messi:Career statistics > International",
+    "query": "Lionel Messi International",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Lionel Messi",
+        "section": "Career statistics > International"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Sport of athletics:Categories",
+    "query": "Sport of athletics Categories",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Sport of athletics",
+        "section": "Categories"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Usain Bolt:Statistics > World rankings",
+    "query": "Usain Bolt World rankings",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Usain Bolt",
+        "section": "Statistics > World rankings"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Novak Djokovic:Off the court > Sponsorships and business ventures",
+    "query": "Novak Djokovic Sponsorships and business ventures",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Novak Djokovic",
+        "section": "Off the court > Sponsorships and business ventures"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Novak Djokovic:Career > 2020s > 2023: Record-breaking 24th major & 7th ATP Finals titles",
+    "query": "Novak Djokovic 2023: Record-breaking 24th major & 7th ATP Finals titles",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Novak Djokovic",
+        "section": "Career > 2020s > 2023: Record-breaking 24th major & 7th ATP Finals titles"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Basketball:Rules and regulations > Equipment",
+    "query": "Basketball Equipment",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Basketball",
+        "section": "Rules and regulations > Equipment"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Marathon:Statistics > Oldest marathoner",
+    "query": "Marathon Oldest marathoner",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Marathon",
+        "section": "Statistics > Oldest marathoner"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Boston Celtics:History > 1993–1998: Tragedy and decline",
+    "query": "Boston Celtics 1993–1998: Tragedy and decline",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Boston Celtics",
+        "section": "History > 1993–1998: Tragedy and decline"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Lewis Hamilton:Formula One career > McLaren (2007–2012)",
+    "query": "Lewis Hamilton McLaren (2007–2012)",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Lewis Hamilton",
+        "section": "Formula One career > McLaren (2007–2012)"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Novak Djokovic:Career > 2000s > 2007: First ATP 1000 title and major final, top 3",
+    "query": "Novak Djokovic 2007: First ATP 1000 title and major final, top 3",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Novak Djokovic",
+        "section": "Career > 2000s > 2007: First ATP 1000 title and major final, top 3"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Serena Williams:Personal life",
+    "query": "Serena Williams Personal life",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Serena Williams",
+        "section": "Personal life"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Roger Federer:Tennis career > 2010s > 2013: Injury struggles and fall in rankings",
+    "query": "Roger Federer 2013: Injury struggles and fall in rankings",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Roger Federer",
+        "section": "Tennis career > 2010s > 2013: Injury struggles and fall in rankings"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Carl Lewis:Athletic career > 1988 Summer Olympics",
+    "query": "Carl Lewis 1988 Summer Olympics",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Carl Lewis",
+        "section": "Athletic career > 1988 Summer Olympics"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Lionel Messi:Honours",
+    "query": "Lionel Messi Honours",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Lionel Messi",
+        "section": "Honours"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:UEFA Champions League:Format > Qualification",
+    "query": "UEFA Champions League Qualification",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "UEFA Champions League",
+        "section": "Format > Qualification"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Marathon:History > Marathon mania in the US",
+    "query": "Marathon Marathon mania in the US",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Marathon",
+        "section": "History > Marathon mania in the US"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Cristiano Ronaldo:Club career > Return to Manchester United > 2021–2023: Champions League appearances record and 100 Premier League goals",
+    "query": "Cristiano Ronaldo 2021–2023: Champions League appearances record and 100 Premier League goals",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Cristiano Ronaldo",
+        "section": "Club career > Return to Manchester United > 2021–2023: Champions League appearances record and 100 Premier League goals"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Wimbledon Championships:Media coverage and attendance > Television coverage",
+    "query": "Wimbledon Championships Television coverage",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Wimbledon Championships",
+        "section": "Media coverage and attendance > Television coverage"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Pelé:International career > 1970 World Cup",
+    "query": "Pelé 1970 World Cup",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Pelé",
+        "section": "International career > 1970 World Cup"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Basketball:Common techniques and practices > Passing",
+    "query": "Basketball Passing",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Basketball",
+        "section": "Common techniques and practices > Passing"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Jesse Owens:Early life",
+    "query": "Jesse Owens Early life",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Jesse Owens",
+        "section": "Early life"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Max Verstappen:Formula One career > Red Bull (2016–present) > 2019–2020: Dominating teammates",
+    "query": "Max Verstappen 2019–2020: Dominating teammates",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Max Verstappen",
+        "section": "Formula One career > Red Bull (2016–present) > 2019–2020: Dominating teammates"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Ayrton Senna:Cultural legacy > Permanent memorials to Senna",
+    "query": "Ayrton Senna Permanent memorials to Senna",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Ayrton Senna",
+        "section": "Cultural legacy > Permanent memorials to Senna"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:Olympic Games:Commercialisation > Effect of television",
+    "query": "Olympic Games Effect of television",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "Olympic Games",
+        "section": "Commercialisation > Effect of television"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:LeBron James:Media and business interests > Entertainment",
+    "query": "LeBron James Entertainment",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "LeBron James",
+        "section": "Media and business interests > Entertainment"
+      }
+    ],
+    "outOfCorpus": false
+  },
+  {
+    "id": "syn:FC Barcelona:Players",
+    "query": "FC Barcelona Players",
+    "kind": "synthetic",
+    "gold": [
+      {
+        "title": "FC Barcelona",
+        "section": "Players"
+      }
+    ],
+    "outOfCorpus": false
+  }
+]

@@ -1,0 +1,159 @@
+[
+  {
+    "id": "r01-schumacher-ferrari-titles",
+    "query": "Which team did Michael Schumacher win five consecutive world championships with?",
+    "kind": "lookup",
+    "gold": [
+      {
+        "title": "Michael Schumacher",
+        "section": "Formula One career > Ferrari (1996–2006) > 2000–2004: Five consecutive World Championships"
+      }
+    ]
+  },
+  {
+    "id": "r02-kobe-death",
+    "query": "How did Kobe Bryant die?",
+    "kind": "lookup",
+    "gold": [{ "title": "Kobe Bryant", "section": "Death" }]
+  },
+  {
+    "id": "r03-french-open-surface",
+    "query": "What surface is the French Open played on?",
+    "kind": "lookup",
+    "gold": [{ "title": "French Open", "section": "Surface" }]
+  },
+  {
+    "id": "r04-marathon-distance",
+    "query": "How long is a marathon and how was the distance fixed?",
+    "kind": "explain",
+    "gold": [{ "title": "Marathon", "section": "Distance" }]
+  },
+  {
+    "id": "r05-basketball-creation",
+    "query": "Who invented basketball and how was the game created?",
+    "kind": "explain",
+    "gold": [{ "title": "Basketball", "section": "History > Creation" }]
+  },
+  {
+    "id": "r06-senna-death",
+    "query": "What happened to Ayrton Senna at the 1994 San Marino Grand Prix?",
+    "kind": "lookup",
+    "gold": [
+      {
+        "title": "Ayrton Senna",
+        "section": "Death, state funeral and reaction > 1994 San Marino Grand Prix"
+      }
+    ]
+  },
+  {
+    "id": "r07-owens-berlin",
+    "query": "What did Jesse Owens achieve at the 1936 Berlin Olympics?",
+    "kind": "lookup",
+    "gold": [{ "title": "Jesse Owens", "section": "Career > 1936 Berlin Summer Olympics" }]
+  },
+  {
+    "id": "r08-lakers-minneapolis",
+    "query": "Where did the Lakers franchise play before moving to Los Angeles?",
+    "kind": "timeline",
+    "gold": [
+      {
+        "title": "Los Angeles Lakers",
+        "section": "History > 1946–1954: Beginnings and Minneapolis dynasty with George Mikan"
+      }
+    ]
+  },
+  {
+    "id": "r09-ferrari-founder",
+    "query": "Who founded Scuderia Ferrari and how did the team begin?",
+    "kind": "explain",
+    "gold": [{ "title": "Scuderia Ferrari", "section": "History" }]
+  },
+  {
+    "id": "r10-monaco-circuit",
+    "query": "What is the circuit of the Monaco Grand Prix like?",
+    "kind": "explain",
+    "gold": [{ "title": "Monaco Grand Prix", "section": "Circuit" }]
+  },
+  {
+    "id": "r11-messi-psg-ballon",
+    "query": "When did Lionel Messi win his seventh Ballon d'Or?",
+    "kind": "lookup",
+    "gold": [
+      {
+        "title": "Lionel Messi",
+        "section": "Club career > Paris Saint-Germain > 2021–2023: 7th Ballon d'Or and consecutive Ligue 1 titles"
+      }
+    ]
+  },
+  {
+    "id": "r12-nba-finals-format",
+    "query": "What is the format of the NBA Finals series?",
+    "kind": "lookup",
+    "gold": [{ "title": "NBA Finals", "section": "Introduction" }]
+  },
+  {
+    "id": "r13-champions-league-beginnings",
+    "query": "Which club dominated the first years of the European Cup?",
+    "kind": "timeline",
+    "gold": [{ "title": "UEFA Champions League", "section": "History > 1955–1967: Beginnings" }]
+  },
+  {
+    "id": "r14-bolt-100m-record",
+    "query": "What is the men's 100 metres world record time?",
+    "kind": "lookup",
+    "gold": [
+      { "title": "100 metres", "section": "Introduction" },
+      { "title": "Usain Bolt", "section": "Statistics > International competitions" }
+    ]
+  },
+  {
+    "id": "r15-federer-vs-nadal-wimbledon",
+    "query": "Compare Roger Federer's Wimbledon record with Rafael Nadal's Grand Slam titles.",
+    "kind": "compare",
+    "gold": [
+      { "title": "Roger Federer", "section": "Introduction" },
+      {
+        "title": "Rafael Nadal",
+        "section": "Career statistics > Grand Slam tournament performance timeline"
+      }
+    ]
+  },
+  {
+    "id": "r16-summer-olympics-future",
+    "query": "Which cities will host the future Summer Olympic Games?",
+    "kind": "lookup",
+    "gold": [{ "title": "Summer Olympic Games", "section": "History > Future Games" }]
+  },
+  {
+    "id": "o01-stanley-cup",
+    "query": "Which ice hockey team has won the most Stanley Cup titles?",
+    "kind": "lookup",
+    "gold": [],
+    "outOfCorpus": true,
+    "note": "No chunk mentions the Stanley Cup."
+  },
+  {
+    "id": "o02-tour-de-france",
+    "query": "Who has won the Tour de France the most times?",
+    "kind": "lookup",
+    "gold": [],
+    "outOfCorpus": true,
+    "note": "No chunk mentions the Tour de France."
+  },
+  {
+    "id": "o03-cricket-world-cup",
+    "query": "Which country won the most recent Cricket World Cup?",
+    "kind": "lookup",
+    "gold": [],
+    "outOfCorpus": true,
+    "note": "No chunk mentions the Cricket World Cup."
+  },
+  {
+    "id": "o04-ryder-cup",
+    "query": "How is the golf Ryder Cup between Europe and the United States scored?",
+    "kind": "explain",
+    "gold": [],
+    "outOfCorpus": true,
+    "note": "No chunk mentions the Ryder Cup."
+  }
+]

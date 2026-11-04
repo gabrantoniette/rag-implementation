@@ -1,0 +1,1964 @@
+{
+  "date": "2026-11-04",
+  "reranker": "pass-through",
+  "results": {
+    "hand": [
+      [
+        "vector only",
+        {
+          "queries": 16,
+          "recallAt6": 0.8125,
+          "mrr": 0.7335069444444444,
+          "ndcgAt6": 0.5600667502033865,
+          "perQuery": [
+            {
+              "id": "r01-schumacher-ferrari-titles",
+              "ndcg": 0.5670738205908158,
+              "rr": 0.5
+            },
+            {
+              "id": "r02-kobe-death",
+              "ndcg": 0.5499887725471476,
+              "rr": 1
+            },
+            {
+              "id": "r03-french-open-surface",
+              "ndcg": 0.6713860725233041,
+              "rr": 1
+            },
+            {
+              "id": "r04-marathon-distance",
+              "ndcg": 0.8854598815714874,
+              "rr": 1
+            },
+            {
+              "id": "r05-basketball-creation",
+              "ndcg": 0.7618870795651185,
+              "rr": 1
+            },
+            {
+              "id": "r06-senna-death",
+              "ndcg": 0.5413996682199069,
+              "rr": 1
+            },
+            {
+              "id": "r07-owens-berlin",
+              "ndcg": 0.5896084319766756,
+              "rr": 0.5
+            },
+            {
+              "id": "r08-lakers-minneapolis",
+              "ndcg": 0,
+              "rr": 0.125
+            },
+            {
+              "id": "r09-ferrari-founder",
+              "ndcg": 0.6973975865011866,
+              "rr": 0.5
+            },
+            {
+              "id": "r10-monaco-circuit",
+              "ndcg": 0.5043776700708298,
+              "rr": 0.5
+            },
+            {
+              "id": "r11-messi-psg-ballon",
+              "ndcg": 0,
+              "rr": 0.1111111111111111
+            },
+            {
+              "id": "r12-nba-finals-format",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "r13-champions-league-beginnings",
+              "ndcg": 0.591176585485452,
+              "rr": 1
+            },
+            {
+              "id": "r14-bolt-100m-record",
+              "ndcg": 0.4103915680233244,
+              "rr": 1
+            },
+            {
+              "id": "r15-federer-vs-nadal-wimbledon",
+              "ndcg": 0.19092086617893467,
+              "rr": 0.5
+            },
+            {
+              "id": "r16-summer-olympics-future",
+              "ndcg": 1,
+              "rr": 1
+            }
+          ]
+        }
+      ],
+      [
+        "hybrid (vector + fulltext, RRF)",
+        {
+          "queries": 16,
+          "recallAt6": 0.8125,
+          "mrr": 0.74609375,
+          "ndcgAt6": 0.5739055164465267,
+          "perQuery": [
+            {
+              "id": "r01-schumacher-ferrari-titles",
+              "ndcg": 0.6973975865011866,
+              "rr": 0.5
+            },
+            {
+              "id": "r02-kobe-death",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "r03-french-open-surface",
+              "ndcg": 0.8529278650606567,
+              "rr": 1
+            },
+            {
+              "id": "r04-marathon-distance",
+              "ndcg": 0.8529278650606567,
+              "rr": 1
+            },
+            {
+              "id": "r05-basketball-creation",
+              "ndcg": 0.7409096387260823,
+              "rr": 1
+            },
+            {
+              "id": "r06-senna-death",
+              "ndcg": 0.7095272044910244,
+              "rr": 1
+            },
+            {
+              "id": "r07-owens-berlin",
+              "ndcg": 0.8090791338210652,
+              "rr": 1
+            },
+            {
+              "id": "r08-lakers-minneapolis",
+              "ndcg": 0,
+              "rr": 0.0625
+            },
+            {
+              "id": "r09-ferrari-founder",
+              "ndcg": 0.6973975865011866,
+              "rr": 0.5
+            },
+            {
+              "id": "r10-monaco-circuit",
+              "ndcg": 0.6504460199135362,
+              "rr": 0.5
+            },
+            {
+              "id": "r11-messi-psg-ballon",
+              "ndcg": 0.2640681225725909,
+              "rr": 0.25
+            },
+            {
+              "id": "r12-nba-finals-format",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "r13-champions-league-beginnings",
+              "ndcg": 0,
+              "rr": 0.125
+            },
+            {
+              "id": "r14-bolt-100m-record",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "r15-federer-vs-nadal-wimbledon",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "r16-summer-olympics-future",
+              "ndcg": 1,
+              "rr": 1
+            }
+          ]
+        }
+      ],
+      [
+        "hybrid + graph expansion",
+        {
+          "queries": 16,
+          "recallAt6": 0.875,
+          "mrr": 0.7516826923076922,
+          "ndcgAt6": 0.573692342192804,
+          "perQuery": [
+            {
+              "id": "r01-schumacher-ferrari-titles",
+              "ndcg": 0.5896084319766756,
+              "rr": 0.5
+            },
+            {
+              "id": "r02-kobe-death",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "r03-french-open-surface",
+              "ndcg": 0.8529278650606567,
+              "rr": 1
+            },
+            {
+              "id": "r04-marathon-distance",
+              "ndcg": 0.8529278650606567,
+              "rr": 1
+            },
+            {
+              "id": "r05-basketball-creation",
+              "ndcg": 0.7409096387260823,
+              "rr": 1
+            },
+            {
+              "id": "r06-senna-death",
+              "ndcg": 0.6975637657739948,
+              "rr": 1
+            },
+            {
+              "id": "r07-owens-berlin",
+              "ndcg": 0.8090791338210652,
+              "rr": 1
+            },
+            {
+              "id": "r08-lakers-minneapolis",
+              "ndcg": 0,
+              "rr": 0.07692307692307693
+            },
+            {
+              "id": "r09-ferrari-founder",
+              "ndcg": 0.6973975865011866,
+              "rr": 0.5
+            },
+            {
+              "id": "r10-monaco-circuit",
+              "ndcg": 0.6355827475831716,
+              "rr": 0.5
+            },
+            {
+              "id": "r11-messi-psg-ballon",
+              "ndcg": 0.2640681225725909,
+              "rr": 0.25
+            },
+            {
+              "id": "r12-nba-finals-format",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "r13-champions-league-beginnings",
+              "ndcg": 0.13120507751234178,
+              "rr": 0.2
+            },
+            {
+              "id": "r14-bolt-100m-record",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "r15-federer-vs-nadal-wimbledon",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "r16-summer-olympics-future",
+              "ndcg": 1,
+              "rr": 1
+            }
+          ]
+        }
+      ],
+      [
+        "hybrid + graph + reranker",
+        {
+          "queries": 16,
+          "recallAt6": 0.8125,
+          "mrr": 0.74609375,
+          "ndcgAt6": 0.5739055164465267,
+          "perQuery": [
+            {
+              "id": "r01-schumacher-ferrari-titles",
+              "ndcg": 0.6973975865011866,
+              "rr": 0.5
+            },
+            {
+              "id": "r02-kobe-death",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "r03-french-open-surface",
+              "ndcg": 0.8529278650606567,
+              "rr": 1
+            },
+            {
+              "id": "r04-marathon-distance",
+              "ndcg": 0.8529278650606567,
+              "rr": 1
+            },
+            {
+              "id": "r05-basketball-creation",
+              "ndcg": 0.7409096387260823,
+              "rr": 1
+            },
+            {
+              "id": "r06-senna-death",
+              "ndcg": 0.7095272044910244,
+              "rr": 1
+            },
+            {
+              "id": "r07-owens-berlin",
+              "ndcg": 0.8090791338210652,
+              "rr": 1
+            },
+            {
+              "id": "r08-lakers-minneapolis",
+              "ndcg": 0,
+              "rr": 0.0625
+            },
+            {
+              "id": "r09-ferrari-founder",
+              "ndcg": 0.6973975865011866,
+              "rr": 0.5
+            },
+            {
+              "id": "r10-monaco-circuit",
+              "ndcg": 0.6504460199135362,
+              "rr": 0.5
+            },
+            {
+              "id": "r11-messi-psg-ballon",
+              "ndcg": 0.2640681225725909,
+              "rr": 0.25
+            },
+            {
+              "id": "r12-nba-finals-format",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "r13-champions-league-beginnings",
+              "ndcg": 0,
+              "rr": 0.125
+            },
+            {
+              "id": "r14-bolt-100m-record",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "r15-federer-vs-nadal-wimbledon",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "r16-summer-olympics-future",
+              "ndcg": 1,
+              "rr": 1
+            }
+          ]
+        }
+      ]
+    ],
+    "synthetic": [
+      [
+        "vector only",
+        {
+          "queries": 30,
+          "recallAt6": 0.9666666666666667,
+          "mrr": 0.816984126984127,
+          "ndcgAt6": 0.763429710864192,
+          "perQuery": [
+            {
+              "id": "syn:Rafael Nadal:Player profile > Playing style",
+              "ndcg": 0.8318724637288826,
+              "rr": 1
+            },
+            {
+              "id": "syn:Tennis:Shots > Grip",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2000s > 2008: First Major title, Olympic Bronze and ATP Finals title",
+              "ndcg": 0.9197207891481876,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Off the court > In popular culture",
+              "ndcg": 0.892210845475489,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lionel Messi:Career statistics > International",
+              "ndcg": 0,
+              "rr": 0.14285714285714285
+            },
+            {
+              "id": "syn:Sport of athletics:Categories",
+              "ndcg": 0.11706259313796354,
+              "rr": 0.2
+            },
+            {
+              "id": "syn:Usain Bolt:Statistics > World rankings",
+              "ndcg": 0.3562071871080222,
+              "rr": 0.16666666666666666
+            },
+            {
+              "id": "syn:Novak Djokovic:Off the court > Sponsorships and business ventures",
+              "ndcg": 0.892210845475489,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2020s > 2023: Record-breaking 24th major & 7th ATP Finals titles",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Basketball:Rules and regulations > Equipment",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Marathon:Statistics > Oldest marathoner",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Boston Celtics:History > 1993–1998: Tragedy and decline",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lewis Hamilton:Formula One career > McLaren (2007–2012)",
+              "ndcg": 0.6973975865011866,
+              "rr": 0.5
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2000s > 2007: First ATP 1000 title and major final, top 3",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Serena Williams:Personal life",
+              "ndcg": 0.6131471927654584,
+              "rr": 1
+            },
+            {
+              "id": "syn:Roger Federer:Tennis career > 2010s > 2013: Injury struggles and fall in rankings",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Carl Lewis:Athletic career > 1988 Summer Olympics",
+              "ndcg": 0.4632423659320675,
+              "rr": 0.5
+            },
+            {
+              "id": "syn:Lionel Messi:Honours",
+              "ndcg": 0.49818925746641285,
+              "rr": 0.5
+            },
+            {
+              "id": "syn:UEFA Champions League:Format > Qualification",
+              "ndcg": 0.7751482523375255,
+              "rr": 1
+            },
+            {
+              "id": "syn:Marathon:History > Marathon mania in the US",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Cristiano Ronaldo:Club career > Return to Manchester United > 2021–2023: Champions League appearances record and 100 Premier League goals",
+              "ndcg": 0.9197207891481876,
+              "rr": 1
+            },
+            {
+              "id": "syn:Wimbledon Championships:Media coverage and attendance > Television coverage",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Pelé:International career > 1970 World Cup",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Basketball:Common techniques and practices > Passing",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Jesse Owens:Early life",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Max Verstappen:Formula One career > Red Bull (2016–present) > 2019–2020: Dominating teammates",
+              "ndcg": 0.13032376591037062,
+              "rr": 0.25
+            },
+            {
+              "id": "syn:Ayrton Senna:Cultural legacy > Permanent memorials to Senna",
+              "ndcg": 0.43067655807339306,
+              "rr": 0.25
+            },
+            {
+              "id": "syn:Olympic Games:Commercialisation > Effect of television",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:LeBron James:Media and business interests > Entertainment",
+              "ndcg": 0.6131471927654584,
+              "rr": 1
+            },
+            {
+              "id": "syn:FC Barcelona:Players",
+              "ndcg": 0.7526136409516659,
+              "rr": 1
+            }
+          ]
+        }
+      ],
+      [
+        "hybrid (vector + fulltext, RRF)",
+        {
+          "queries": 30,
+          "recallAt6": 0.9666666666666667,
+          "mrr": 0.9208333333333333,
+          "ndcgAt6": 0.867766222741673,
+          "perQuery": [
+            {
+              "id": "syn:Rafael Nadal:Player profile > Playing style",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Tennis:Shots > Grip",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2000s > 2008: First Major title, Olympic Bronze and ATP Finals title",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Off the court > In popular culture",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lionel Messi:Career statistics > International",
+              "ndcg": 0,
+              "rr": 0.125
+            },
+            {
+              "id": "syn:Sport of athletics:Categories",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "syn:Usain Bolt:Statistics > World rankings",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Off the court > Sponsorships and business ventures",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2020s > 2023: Record-breaking 24th major & 7th ATP Finals titles",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Basketball:Rules and regulations > Equipment",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Marathon:Statistics > Oldest marathoner",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Boston Celtics:History > 1993–1998: Tragedy and decline",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lewis Hamilton:Formula One career > McLaren (2007–2012)",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2000s > 2007: First ATP 1000 title and major final, top 3",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Serena Williams:Personal life",
+              "ndcg": 0.6131471927654584,
+              "rr": 1
+            },
+            {
+              "id": "syn:Roger Federer:Tennis career > 2010s > 2013: Injury struggles and fall in rankings",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Carl Lewis:Athletic career > 1988 Summer Olympics",
+              "ndcg": 0.9674679834891693,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lionel Messi:Honours",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:UEFA Champions League:Format > Qualification",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Marathon:History > Marathon mania in the US",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Cristiano Ronaldo:Club career > Return to Manchester United > 2021–2023: Champions League appearances record and 100 Premier League goals",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Wimbledon Championships:Media coverage and attendance > Television coverage",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Pelé:International career > 1970 World Cup",
+              "ndcg": 0.843537875344446,
+              "rr": 1
+            },
+            {
+              "id": "syn:Basketball:Common techniques and practices > Passing",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Jesse Owens:Early life",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Max Verstappen:Formula One career > Red Bull (2016–present) > 2019–2020: Dominating teammates",
+              "ndcg": 0.5896084319766756,
+              "rr": 0.5
+            },
+            {
+              "id": "syn:Ayrton Senna:Cultural legacy > Permanent memorials to Senna",
+              "ndcg": 0.6309297535714575,
+              "rr": 0.5
+            },
+            {
+              "id": "syn:Olympic Games:Commercialisation > Effect of television",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:LeBron James:Media and business interests > Entertainment",
+              "ndcg": 0.6131471927654584,
+              "rr": 1
+            },
+            {
+              "id": "syn:FC Barcelona:Players",
+              "ndcg": 0.47254583883871204,
+              "rr": 0.5
+            }
+          ]
+        }
+      ],
+      [
+        "hybrid + graph expansion",
+        {
+          "queries": 30,
+          "recallAt6": 0.9666666666666667,
+          "mrr": 0.9148148148148147,
+          "ndcgAt6": 0.8536977509743636,
+          "perQuery": [
+            {
+              "id": "syn:Rafael Nadal:Player profile > Playing style",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Tennis:Shots > Grip",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2000s > 2008: First Major title, Olympic Bronze and ATP Finals title",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Off the court > In popular culture",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lionel Messi:Career statistics > International",
+              "ndcg": 0,
+              "rr": 0.1111111111111111
+            },
+            {
+              "id": "syn:Sport of athletics:Categories",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "syn:Usain Bolt:Statistics > World rankings",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Off the court > Sponsorships and business ventures",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2020s > 2023: Record-breaking 24th major & 7th ATP Finals titles",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Basketball:Rules and regulations > Equipment",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Marathon:Statistics > Oldest marathoner",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Boston Celtics:History > 1993–1998: Tragedy and decline",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lewis Hamilton:Formula One career > McLaren (2007–2012)",
+              "ndcg": 0.8486987932505933,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2000s > 2007: First ATP 1000 title and major final, top 3",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Serena Williams:Personal life",
+              "ndcg": 0.6131471927654584,
+              "rr": 1
+            },
+            {
+              "id": "syn:Roger Federer:Tennis career > 2010s > 2013: Injury struggles and fall in rankings",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Carl Lewis:Athletic career > 1988 Summer Olympics",
+              "ndcg": 0.9060254355346823,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lionel Messi:Honours",
+              "ndcg": 0.9674679834891693,
+              "rr": 1
+            },
+            {
+              "id": "syn:UEFA Champions League:Format > Qualification",
+              "ndcg": 0.892210845475489,
+              "rr": 1
+            },
+            {
+              "id": "syn:Marathon:History > Marathon mania in the US",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Cristiano Ronaldo:Club career > Return to Manchester United > 2021–2023: Champions League appearances record and 100 Premier League goals",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Wimbledon Championships:Media coverage and attendance > Television coverage",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Pelé:International career > 1970 World Cup",
+              "ndcg": 0.9747429528567879,
+              "rr": 1
+            },
+            {
+              "id": "syn:Basketball:Common techniques and practices > Passing",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Jesse Owens:Early life",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Max Verstappen:Formula One career > Red Bull (2016–present) > 2019–2020: Dominating teammates",
+              "ndcg": 0.3894141271842883,
+              "rr": 0.3333333333333333
+            },
+            {
+              "id": "syn:Ayrton Senna:Cultural legacy > Permanent memorials to Senna",
+              "ndcg": 0.6309297535714575,
+              "rr": 0.5
+            },
+            {
+              "id": "syn:Olympic Games:Commercialisation > Effect of television",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:LeBron James:Media and business interests > Entertainment",
+              "ndcg": 0.6131471927654584,
+              "rr": 1
+            },
+            {
+              "id": "syn:FC Barcelona:Players",
+              "ndcg": 0.47254583883871204,
+              "rr": 0.5
+            }
+          ]
+        }
+      ],
+      [
+        "hybrid + graph + reranker",
+        {
+          "queries": 30,
+          "recallAt6": 0.9666666666666667,
+          "mrr": 0.9208333333333333,
+          "ndcgAt6": 0.867766222741673,
+          "perQuery": [
+            {
+              "id": "syn:Rafael Nadal:Player profile > Playing style",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Tennis:Shots > Grip",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2000s > 2008: First Major title, Olympic Bronze and ATP Finals title",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Off the court > In popular culture",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lionel Messi:Career statistics > International",
+              "ndcg": 0,
+              "rr": 0.125
+            },
+            {
+              "id": "syn:Sport of athletics:Categories",
+              "ndcg": 0.30260241349881345,
+              "rr": 1
+            },
+            {
+              "id": "syn:Usain Bolt:Statistics > World rankings",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Off the court > Sponsorships and business ventures",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2020s > 2023: Record-breaking 24th major & 7th ATP Finals titles",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Basketball:Rules and regulations > Equipment",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Marathon:Statistics > Oldest marathoner",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Boston Celtics:History > 1993–1998: Tragedy and decline",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lewis Hamilton:Formula One career > McLaren (2007–2012)",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Novak Djokovic:Career > 2000s > 2007: First ATP 1000 title and major final, top 3",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Serena Williams:Personal life",
+              "ndcg": 0.6131471927654584,
+              "rr": 1
+            },
+            {
+              "id": "syn:Roger Federer:Tennis career > 2010s > 2013: Injury struggles and fall in rankings",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Carl Lewis:Athletic career > 1988 Summer Olympics",
+              "ndcg": 0.9674679834891693,
+              "rr": 1
+            },
+            {
+              "id": "syn:Lionel Messi:Honours",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:UEFA Champions League:Format > Qualification",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Marathon:History > Marathon mania in the US",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Cristiano Ronaldo:Club career > Return to Manchester United > 2021–2023: Champions League appearances record and 100 Premier League goals",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Wimbledon Championships:Media coverage and attendance > Television coverage",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Pelé:International career > 1970 World Cup",
+              "ndcg": 0.843537875344446,
+              "rr": 1
+            },
+            {
+              "id": "syn:Basketball:Common techniques and practices > Passing",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Jesse Owens:Early life",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:Max Verstappen:Formula One career > Red Bull (2016–present) > 2019–2020: Dominating teammates",
+              "ndcg": 0.5896084319766756,
+              "rr": 0.5
+            },
+            {
+              "id": "syn:Ayrton Senna:Cultural legacy > Permanent memorials to Senna",
+              "ndcg": 0.6309297535714575,
+              "rr": 0.5
+            },
+            {
+              "id": "syn:Olympic Games:Commercialisation > Effect of television",
+              "ndcg": 1,
+              "rr": 1
+            },
+            {
+              "id": "syn:LeBron James:Media and business interests > Entertainment",
+              "ndcg": 0.6131471927654584,
+              "rr": 1
+            },
+            {
+              "id": "syn:FC Barcelona:Players",
+              "ndcg": 0.47254583883871204,
+              "rr": 0.5
+            }
+          ]
+        }
+      ]
+    ]
+  },
+  "perQuery": {
+    "vector": {
+      "hand": [
+        {
+          "id": "r01-schumacher-ferrari-titles",
+          "ndcg": 0.5670738205908158,
+          "rr": 0.5
+        },
+        {
+          "id": "r02-kobe-death",
+          "ndcg": 0.5499887725471476,
+          "rr": 1
+        },
+        {
+          "id": "r03-french-open-surface",
+          "ndcg": 0.6713860725233041,
+          "rr": 1
+        },
+        {
+          "id": "r04-marathon-distance",
+          "ndcg": 0.8854598815714874,
+          "rr": 1
+        },
+        {
+          "id": "r05-basketball-creation",
+          "ndcg": 0.7618870795651185,
+          "rr": 1
+        },
+        {
+          "id": "r06-senna-death",
+          "ndcg": 0.5413996682199069,
+          "rr": 1
+        },
+        {
+          "id": "r07-owens-berlin",
+          "ndcg": 0.5896084319766756,
+          "rr": 0.5
+        },
+        {
+          "id": "r08-lakers-minneapolis",
+          "ndcg": 0,
+          "rr": 0.125
+        },
+        {
+          "id": "r09-ferrari-founder",
+          "ndcg": 0.6973975865011866,
+          "rr": 0.5
+        },
+        {
+          "id": "r10-monaco-circuit",
+          "ndcg": 0.5043776700708298,
+          "rr": 0.5
+        },
+        {
+          "id": "r11-messi-psg-ballon",
+          "ndcg": 0,
+          "rr": 0.1111111111111111
+        },
+        {
+          "id": "r12-nba-finals-format",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "r13-champions-league-beginnings",
+          "ndcg": 0.591176585485452,
+          "rr": 1
+        },
+        {
+          "id": "r14-bolt-100m-record",
+          "ndcg": 0.4103915680233244,
+          "rr": 1
+        },
+        {
+          "id": "r15-federer-vs-nadal-wimbledon",
+          "ndcg": 0.19092086617893467,
+          "rr": 0.5
+        },
+        {
+          "id": "r16-summer-olympics-future",
+          "ndcg": 1,
+          "rr": 1
+        }
+      ],
+      "synthetic": [
+        {
+          "id": "syn:Rafael Nadal:Player profile > Playing style",
+          "ndcg": 0.8318724637288826,
+          "rr": 1
+        },
+        {
+          "id": "syn:Tennis:Shots > Grip",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2000s > 2008: First Major title, Olympic Bronze and ATP Finals title",
+          "ndcg": 0.9197207891481876,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Off the court > In popular culture",
+          "ndcg": 0.892210845475489,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lionel Messi:Career statistics > International",
+          "ndcg": 0,
+          "rr": 0.14285714285714285
+        },
+        {
+          "id": "syn:Sport of athletics:Categories",
+          "ndcg": 0.11706259313796354,
+          "rr": 0.2
+        },
+        {
+          "id": "syn:Usain Bolt:Statistics > World rankings",
+          "ndcg": 0.3562071871080222,
+          "rr": 0.16666666666666666
+        },
+        {
+          "id": "syn:Novak Djokovic:Off the court > Sponsorships and business ventures",
+          "ndcg": 0.892210845475489,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2020s > 2023: Record-breaking 24th major & 7th ATP Finals titles",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Basketball:Rules and regulations > Equipment",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Marathon:Statistics > Oldest marathoner",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Boston Celtics:History > 1993–1998: Tragedy and decline",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lewis Hamilton:Formula One career > McLaren (2007–2012)",
+          "ndcg": 0.6973975865011866,
+          "rr": 0.5
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2000s > 2007: First ATP 1000 title and major final, top 3",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Serena Williams:Personal life",
+          "ndcg": 0.6131471927654584,
+          "rr": 1
+        },
+        {
+          "id": "syn:Roger Federer:Tennis career > 2010s > 2013: Injury struggles and fall in rankings",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Carl Lewis:Athletic career > 1988 Summer Olympics",
+          "ndcg": 0.4632423659320675,
+          "rr": 0.5
+        },
+        {
+          "id": "syn:Lionel Messi:Honours",
+          "ndcg": 0.49818925746641285,
+          "rr": 0.5
+        },
+        {
+          "id": "syn:UEFA Champions League:Format > Qualification",
+          "ndcg": 0.7751482523375255,
+          "rr": 1
+        },
+        {
+          "id": "syn:Marathon:History > Marathon mania in the US",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Cristiano Ronaldo:Club career > Return to Manchester United > 2021–2023: Champions League appearances record and 100 Premier League goals",
+          "ndcg": 0.9197207891481876,
+          "rr": 1
+        },
+        {
+          "id": "syn:Wimbledon Championships:Media coverage and attendance > Television coverage",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Pelé:International career > 1970 World Cup",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Basketball:Common techniques and practices > Passing",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Jesse Owens:Early life",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Max Verstappen:Formula One career > Red Bull (2016–present) > 2019–2020: Dominating teammates",
+          "ndcg": 0.13032376591037062,
+          "rr": 0.25
+        },
+        {
+          "id": "syn:Ayrton Senna:Cultural legacy > Permanent memorials to Senna",
+          "ndcg": 0.43067655807339306,
+          "rr": 0.25
+        },
+        {
+          "id": "syn:Olympic Games:Commercialisation > Effect of television",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:LeBron James:Media and business interests > Entertainment",
+          "ndcg": 0.6131471927654584,
+          "rr": 1
+        },
+        {
+          "id": "syn:FC Barcelona:Players",
+          "ndcg": 0.7526136409516659,
+          "rr": 1
+        }
+      ]
+    },
+    "hybrid": {
+      "hand": [
+        {
+          "id": "r01-schumacher-ferrari-titles",
+          "ndcg": 0.6973975865011866,
+          "rr": 0.5
+        },
+        {
+          "id": "r02-kobe-death",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "r03-french-open-surface",
+          "ndcg": 0.8529278650606567,
+          "rr": 1
+        },
+        {
+          "id": "r04-marathon-distance",
+          "ndcg": 0.8529278650606567,
+          "rr": 1
+        },
+        {
+          "id": "r05-basketball-creation",
+          "ndcg": 0.7409096387260823,
+          "rr": 1
+        },
+        {
+          "id": "r06-senna-death",
+          "ndcg": 0.7095272044910244,
+          "rr": 1
+        },
+        {
+          "id": "r07-owens-berlin",
+          "ndcg": 0.8090791338210652,
+          "rr": 1
+        },
+        {
+          "id": "r08-lakers-minneapolis",
+          "ndcg": 0,
+          "rr": 0.0625
+        },
+        {
+          "id": "r09-ferrari-founder",
+          "ndcg": 0.6973975865011866,
+          "rr": 0.5
+        },
+        {
+          "id": "r10-monaco-circuit",
+          "ndcg": 0.6504460199135362,
+          "rr": 0.5
+        },
+        {
+          "id": "r11-messi-psg-ballon",
+          "ndcg": 0.2640681225725909,
+          "rr": 0.25
+        },
+        {
+          "id": "r12-nba-finals-format",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "r13-champions-league-beginnings",
+          "ndcg": 0,
+          "rr": 0.125
+        },
+        {
+          "id": "r14-bolt-100m-record",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "r15-federer-vs-nadal-wimbledon",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "r16-summer-olympics-future",
+          "ndcg": 1,
+          "rr": 1
+        }
+      ],
+      "synthetic": [
+        {
+          "id": "syn:Rafael Nadal:Player profile > Playing style",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Tennis:Shots > Grip",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2000s > 2008: First Major title, Olympic Bronze and ATP Finals title",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Off the court > In popular culture",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lionel Messi:Career statistics > International",
+          "ndcg": 0,
+          "rr": 0.125
+        },
+        {
+          "id": "syn:Sport of athletics:Categories",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "syn:Usain Bolt:Statistics > World rankings",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Off the court > Sponsorships and business ventures",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2020s > 2023: Record-breaking 24th major & 7th ATP Finals titles",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Basketball:Rules and regulations > Equipment",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Marathon:Statistics > Oldest marathoner",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Boston Celtics:History > 1993–1998: Tragedy and decline",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lewis Hamilton:Formula One career > McLaren (2007–2012)",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2000s > 2007: First ATP 1000 title and major final, top 3",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Serena Williams:Personal life",
+          "ndcg": 0.6131471927654584,
+          "rr": 1
+        },
+        {
+          "id": "syn:Roger Federer:Tennis career > 2010s > 2013: Injury struggles and fall in rankings",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Carl Lewis:Athletic career > 1988 Summer Olympics",
+          "ndcg": 0.9674679834891693,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lionel Messi:Honours",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:UEFA Champions League:Format > Qualification",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Marathon:History > Marathon mania in the US",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Cristiano Ronaldo:Club career > Return to Manchester United > 2021–2023: Champions League appearances record and 100 Premier League goals",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Wimbledon Championships:Media coverage and attendance > Television coverage",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Pelé:International career > 1970 World Cup",
+          "ndcg": 0.843537875344446,
+          "rr": 1
+        },
+        {
+          "id": "syn:Basketball:Common techniques and practices > Passing",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Jesse Owens:Early life",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Max Verstappen:Formula One career > Red Bull (2016–present) > 2019–2020: Dominating teammates",
+          "ndcg": 0.5896084319766756,
+          "rr": 0.5
+        },
+        {
+          "id": "syn:Ayrton Senna:Cultural legacy > Permanent memorials to Senna",
+          "ndcg": 0.6309297535714575,
+          "rr": 0.5
+        },
+        {
+          "id": "syn:Olympic Games:Commercialisation > Effect of television",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:LeBron James:Media and business interests > Entertainment",
+          "ndcg": 0.6131471927654584,
+          "rr": 1
+        },
+        {
+          "id": "syn:FC Barcelona:Players",
+          "ndcg": 0.47254583883871204,
+          "rr": 0.5
+        }
+      ]
+    },
+    "graph": {
+      "hand": [
+        {
+          "id": "r01-schumacher-ferrari-titles",
+          "ndcg": 0.5896084319766756,
+          "rr": 0.5
+        },
+        {
+          "id": "r02-kobe-death",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "r03-french-open-surface",
+          "ndcg": 0.8529278650606567,
+          "rr": 1
+        },
+        {
+          "id": "r04-marathon-distance",
+          "ndcg": 0.8529278650606567,
+          "rr": 1
+        },
+        {
+          "id": "r05-basketball-creation",
+          "ndcg": 0.7409096387260823,
+          "rr": 1
+        },
+        {
+          "id": "r06-senna-death",
+          "ndcg": 0.6975637657739948,
+          "rr": 1
+        },
+        {
+          "id": "r07-owens-berlin",
+          "ndcg": 0.8090791338210652,
+          "rr": 1
+        },
+        {
+          "id": "r08-lakers-minneapolis",
+          "ndcg": 0,
+          "rr": 0.07692307692307693
+        },
+        {
+          "id": "r09-ferrari-founder",
+          "ndcg": 0.6973975865011866,
+          "rr": 0.5
+        },
+        {
+          "id": "r10-monaco-circuit",
+          "ndcg": 0.6355827475831716,
+          "rr": 0.5
+        },
+        {
+          "id": "r11-messi-psg-ballon",
+          "ndcg": 0.2640681225725909,
+          "rr": 0.25
+        },
+        {
+          "id": "r12-nba-finals-format",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "r13-champions-league-beginnings",
+          "ndcg": 0.13120507751234178,
+          "rr": 0.2
+        },
+        {
+          "id": "r14-bolt-100m-record",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "r15-federer-vs-nadal-wimbledon",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "r16-summer-olympics-future",
+          "ndcg": 1,
+          "rr": 1
+        }
+      ],
+      "synthetic": [
+        {
+          "id": "syn:Rafael Nadal:Player profile > Playing style",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Tennis:Shots > Grip",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2000s > 2008: First Major title, Olympic Bronze and ATP Finals title",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Off the court > In popular culture",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lionel Messi:Career statistics > International",
+          "ndcg": 0,
+          "rr": 0.1111111111111111
+        },
+        {
+          "id": "syn:Sport of athletics:Categories",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "syn:Usain Bolt:Statistics > World rankings",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Off the court > Sponsorships and business ventures",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2020s > 2023: Record-breaking 24th major & 7th ATP Finals titles",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Basketball:Rules and regulations > Equipment",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Marathon:Statistics > Oldest marathoner",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Boston Celtics:History > 1993–1998: Tragedy and decline",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lewis Hamilton:Formula One career > McLaren (2007–2012)",
+          "ndcg": 0.8486987932505933,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2000s > 2007: First ATP 1000 title and major final, top 3",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Serena Williams:Personal life",
+          "ndcg": 0.6131471927654584,
+          "rr": 1
+        },
+        {
+          "id": "syn:Roger Federer:Tennis career > 2010s > 2013: Injury struggles and fall in rankings",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Carl Lewis:Athletic career > 1988 Summer Olympics",
+          "ndcg": 0.9060254355346823,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lionel Messi:Honours",
+          "ndcg": 0.9674679834891693,
+          "rr": 1
+        },
+        {
+          "id": "syn:UEFA Champions League:Format > Qualification",
+          "ndcg": 0.892210845475489,
+          "rr": 1
+        },
+        {
+          "id": "syn:Marathon:History > Marathon mania in the US",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Cristiano Ronaldo:Club career > Return to Manchester United > 2021–2023: Champions League appearances record and 100 Premier League goals",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Wimbledon Championships:Media coverage and attendance > Television coverage",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Pelé:International career > 1970 World Cup",
+          "ndcg": 0.9747429528567879,
+          "rr": 1
+        },
+        {
+          "id": "syn:Basketball:Common techniques and practices > Passing",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Jesse Owens:Early life",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Max Verstappen:Formula One career > Red Bull (2016–present) > 2019–2020: Dominating teammates",
+          "ndcg": 0.3894141271842883,
+          "rr": 0.3333333333333333
+        },
+        {
+          "id": "syn:Ayrton Senna:Cultural legacy > Permanent memorials to Senna",
+          "ndcg": 0.6309297535714575,
+          "rr": 0.5
+        },
+        {
+          "id": "syn:Olympic Games:Commercialisation > Effect of television",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:LeBron James:Media and business interests > Entertainment",
+          "ndcg": 0.6131471927654584,
+          "rr": 1
+        },
+        {
+          "id": "syn:FC Barcelona:Players",
+          "ndcg": 0.47254583883871204,
+          "rr": 0.5
+        }
+      ]
+    },
+    "rerank": {
+      "hand": [
+        {
+          "id": "r01-schumacher-ferrari-titles",
+          "ndcg": 0.6973975865011866,
+          "rr": 0.5
+        },
+        {
+          "id": "r02-kobe-death",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "r03-french-open-surface",
+          "ndcg": 0.8529278650606567,
+          "rr": 1
+        },
+        {
+          "id": "r04-marathon-distance",
+          "ndcg": 0.8529278650606567,
+          "rr": 1
+        },
+        {
+          "id": "r05-basketball-creation",
+          "ndcg": 0.7409096387260823,
+          "rr": 1
+        },
+        {
+          "id": "r06-senna-death",
+          "ndcg": 0.7095272044910244,
+          "rr": 1
+        },
+        {
+          "id": "r07-owens-berlin",
+          "ndcg": 0.8090791338210652,
+          "rr": 1
+        },
+        {
+          "id": "r08-lakers-minneapolis",
+          "ndcg": 0,
+          "rr": 0.0625
+        },
+        {
+          "id": "r09-ferrari-founder",
+          "ndcg": 0.6973975865011866,
+          "rr": 0.5
+        },
+        {
+          "id": "r10-monaco-circuit",
+          "ndcg": 0.6504460199135362,
+          "rr": 0.5
+        },
+        {
+          "id": "r11-messi-psg-ballon",
+          "ndcg": 0.2640681225725909,
+          "rr": 0.25
+        },
+        {
+          "id": "r12-nba-finals-format",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "r13-champions-league-beginnings",
+          "ndcg": 0,
+          "rr": 0.125
+        },
+        {
+          "id": "r14-bolt-100m-record",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "r15-federer-vs-nadal-wimbledon",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "r16-summer-olympics-future",
+          "ndcg": 1,
+          "rr": 1
+        }
+      ],
+      "synthetic": [
+        {
+          "id": "syn:Rafael Nadal:Player profile > Playing style",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Tennis:Shots > Grip",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2000s > 2008: First Major title, Olympic Bronze and ATP Finals title",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Off the court > In popular culture",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lionel Messi:Career statistics > International",
+          "ndcg": 0,
+          "rr": 0.125
+        },
+        {
+          "id": "syn:Sport of athletics:Categories",
+          "ndcg": 0.30260241349881345,
+          "rr": 1
+        },
+        {
+          "id": "syn:Usain Bolt:Statistics > World rankings",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Off the court > Sponsorships and business ventures",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2020s > 2023: Record-breaking 24th major & 7th ATP Finals titles",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Basketball:Rules and regulations > Equipment",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Marathon:Statistics > Oldest marathoner",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Boston Celtics:History > 1993–1998: Tragedy and decline",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lewis Hamilton:Formula One career > McLaren (2007–2012)",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Novak Djokovic:Career > 2000s > 2007: First ATP 1000 title and major final, top 3",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Serena Williams:Personal life",
+          "ndcg": 0.6131471927654584,
+          "rr": 1
+        },
+        {
+          "id": "syn:Roger Federer:Tennis career > 2010s > 2013: Injury struggles and fall in rankings",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Carl Lewis:Athletic career > 1988 Summer Olympics",
+          "ndcg": 0.9674679834891693,
+          "rr": 1
+        },
+        {
+          "id": "syn:Lionel Messi:Honours",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:UEFA Champions League:Format > Qualification",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Marathon:History > Marathon mania in the US",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Cristiano Ronaldo:Club career > Return to Manchester United > 2021–2023: Champions League appearances record and 100 Premier League goals",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Wimbledon Championships:Media coverage and attendance > Television coverage",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Pelé:International career > 1970 World Cup",
+          "ndcg": 0.843537875344446,
+          "rr": 1
+        },
+        {
+          "id": "syn:Basketball:Common techniques and practices > Passing",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Jesse Owens:Early life",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:Max Verstappen:Formula One career > Red Bull (2016–present) > 2019–2020: Dominating teammates",
+          "ndcg": 0.5896084319766756,
+          "rr": 0.5
+        },
+        {
+          "id": "syn:Ayrton Senna:Cultural legacy > Permanent memorials to Senna",
+          "ndcg": 0.6309297535714575,
+          "rr": 0.5
+        },
+        {
+          "id": "syn:Olympic Games:Commercialisation > Effect of television",
+          "ndcg": 1,
+          "rr": 1
+        },
+        {
+          "id": "syn:LeBron James:Media and business interests > Entertainment",
+          "ndcg": 0.6131471927654584,
+          "rr": 1
+        },
+        {
+          "id": "syn:FC Barcelona:Players",
+          "ndcg": 0.47254583883871204,
+          "rr": 0.5
+        }
+      ]
+    }
+  }
+}

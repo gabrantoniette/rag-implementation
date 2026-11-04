@@ -85,8 +85,13 @@ P3 acceptance check; any such addition is recorded below with the reason.
 - **OpenRouter model listing.** The API reference lists a Bearer header for `GET /api/v1/models`, but the
   listing answered without a key on 2026-10-29 (456 models, 19 with zero prompt and completion price,
   including `openrouter/free` with a 200,000-token context). Some zero-price entries are not text models
-  (for example `google/lyria-3-pro-preview`, a music model), so the allowlist also requires `text` in
-  `architecture.output_modalities` (deviation from the prompt, which filters on price and context only).
+  (for example `google/lyria-3-pro-preview`, a music model that lists `["text", "audio"]`), so the
+  allowlist also requires `architecture.output_modalities` to be exactly `["text"]` (deviation from the
+  prompt, which filters on price and context only).
+- **OpenRouter auto-pick.** With `OPENROUTER_MODEL` empty, the preferred model is an official free
+  variant (an id ending in `:free`, or `openrouter/free`) with the largest context. Other zero-priced
+  ids are usually stealth or preview models: on 2026-11-04 the largest one, `stealth/crouton-alpha`,
+  answered the evidence run with an upstream `PROHIBITED_CONTENT` block. They stay allowed when pinned.
 - **tesseract.js 7.** Supported image formats: bmp, jpg, png, pbm, webp, gif (non-animated), so all five
   image extensions in the prompt are kept. Since v6 every output except `text` is disabled by default;
   word confidences need `worker.recognize(image, {}, { blocks: true })`. `langPath` and `cachePath`

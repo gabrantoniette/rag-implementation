@@ -1,0 +1,71 @@
+[
+  {
+    "id": "q1-hamilton-previous-team",
+    "question": "Which Formula One team did Lewis Hamilton leave when he signed for Mercedes in 2013?",
+    "capability": "single-fact lookup",
+    "expected_facts": [
+      {
+        "fact": "Hamilton signed for Mercedes in 2013, ending his 15-year association with McLaren.",
+        "article": "Lewis Hamilton",
+        "section": "Introduction",
+        "match": ["McLaren"]
+      }
+    ],
+    "must_refuse": false
+  },
+  {
+    "id": "q2-world-cup-2022",
+    "question": "Which national team won the FIFA World Cup in 2022?",
+    "capability": "single-fact lookup",
+    "expected_facts": [
+      {
+        "fact": "Argentina won the World Cup in Asia in 2022.",
+        "article": "FIFA World Cup",
+        "section": "Results > Best performances by confederations",
+        "match": ["Argentina"]
+      }
+    ],
+    "must_refuse": false
+  },
+  {
+    "id": "q3-messi-psg",
+    "question": "Which club did Lionel Messi join in August 2021 after leaving Barcelona?",
+    "capability": "multi-hop (player to club)",
+    "expected_facts": [
+      {
+        "fact": "On 10 August 2021 Messi joined Paris Saint-Germain on a two-year contract.",
+        "article": "Lionel Messi",
+        "section": "Club career > Paris Saint-Germain",
+        "match": ["Paris"]
+      }
+    ],
+    "must_refuse": false
+  },
+  {
+    "id": "q4-djokovic-vs-nadal",
+    "question": "How many Grand Slam singles titles have Novak Djokovic and Rafael Nadal won, and who has more?",
+    "capability": "comparison across two articles",
+    "expected_facts": [
+      {
+        "fact": "Djokovic has won a record 24 majors.",
+        "article": "Novak Djokovic",
+        "section": "Introduction",
+        "match": ["24"]
+      },
+      {
+        "fact": "Nadal has won 22 Grand Slam singles titles, second behind Djokovic's 24.",
+        "article": "Rafael Nadal",
+        "section": "Career statistics > Grand Slam tournament performance timeline",
+        "match": ["22"]
+      }
+    ],
+    "must_refuse": false
+  },
+  {
+    "id": "q5-out-of-corpus",
+    "question": "Who won the 2019 Rugby World Cup?",
+    "capability": "refusal (out of corpus)",
+    "expected_facts": [],
+    "must_refuse": true
+  }
+]

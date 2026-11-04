@@ -26,19 +26,32 @@ export interface ModelInfo {
 
 const isZero = (v: string | undefined) => v === undefined || Number(v) === 0;
 
-/** Free text models with a large enough context: prompt, completion and request prices all zero. */
+/**
+ * Free text models with a large enough context: prompt, completion and request prices all zero, and
+ * text as the only output (a model that also returns audio or images is not a text model).
+ */
 export function freeModels(models: ModelInfo[], minContext: number): ModelInfo[] {
-  return models.filter(
-    (m) =>
+  return models.filter((m) => {
+    const outputs = m.architecture?.output_modalities ?? ['text'];
+    return (
       isZero(m.pricing.prompt) &&
       isZero(m.pricing.completion) &&
       isZero(m.pricing.request) &&
       m.pricing.prompt !== undefined &&
       m.pricing.completion !== undefined &&
       m.context_length >= minContext &&
-      (m.architecture?.output_modalities ?? ['text']).includes('text'),
-  );
+      outputs.length === 1 &&
+      outputs[0] === 'text'
+    );
+  });
 }
+
+/**
+ * Official free variants (':free' ids and the free router) come first. Other zero-priced ids are
+ * usually stealth or preview models: still allowed when pinned, never auto-picked over the former.
+ */
+const isOfficialFree = (id: string, freeRouterId: string) =>
+  id.endsWith(':free') || id === freeRouterId;
 
 export interface OpenRouterOptions {
   apiKey: string;
@@ -92,12 +105,19 @@ export class OpenRouterClient implements LlmClient {
     return json.data;
   }
 
-  /** Discovered free models plus the exact id 'openrouter/free'; preferred = largest context. */
+  /**
+   * Discovered free models plus the exact id 'openrouter/free'; preferred = an official free variant
+   * with the largest context (see isOfficialFree), then any other free model.
+   */
   allowedModels(): Promise<{ ids: Set<string>; preferred: string }> {
     this.allowlist ??= (async () => {
       const llm = this.o.parameters.llm;
+      const official = (m: ModelInfo) => (isOfficialFree(m.id, llm.freeRouterId) ? 0 : 1);
       const free = freeModels(await this.listModels(), llm.minContextLength).sort(
-        (a, b) => b.context_length - a.context_length || a.id.localeCompare(b.id),
+        (a, b) =>
+          official(a) - official(b) ||
+          b.context_length - a.context_length ||
+          a.id.localeCompare(b.id),
       );
       const ids = new Set([...free.map((m) => m.id), llm.freeRouterId]);
       return { ids, preferred: free[0]?.id ?? llm.freeRouterId };
