@@ -83,7 +83,10 @@ runCli(async () => {
         block +
         current.slice(current.indexOf(END) + END.length)
       : `${current.trimEnd()}\n\n## Retrieval ablation\n\n${block}\n`;
-    writeFileSync(file, next);
+    // docs/ is checked by `prettier --check` (npm run lint): write the file already formatted.
+    const prettier = await import('prettier');
+    const options = (await prettier.resolveConfig(file)) ?? {};
+    writeFileSync(file, await prettier.format(next, { ...options, filepath: file }));
     mkdirSync(PATHS.evidence, { recursive: true });
     writeFileSync(
       path.join(PATHS.evidence, `ablation-${date}.json`),

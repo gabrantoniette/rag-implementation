@@ -20,6 +20,7 @@ import {
 } from '../../src/core/errors.js';
 import {
   UNSUPPORTED_MARK,
+  answerSentences,
   markUnsupported,
   sourcesSection,
   validateStructure,
@@ -153,6 +154,32 @@ describe('verification and sources', () => {
     expect(shown).toContain(`Mars is a planet [7]. ${UNSUPPORTED_MARK}`);
     expect(shown).not.toContain(`eight times [1]. ${UNSUPPORTED_MARK}`);
   });
+
+  it('a citation group written after the full stop belongs to that sentence', async () => {
+    // The prompt's own format example writes 'fact. [n]'; the segmenter splits after the full stop.
+    const text =
+      '## Answer\nPizza is a popular food. Federer won Wimbledon eight times. [1]\n\n## Key points\n- Messi plays football for Barcelona. [2]';
+    expect(answerSentences(text)).toEqual([
+      'Pizza is a popular food.',
+      'Federer won Wimbledon eight times. [1]',
+      'Messi plays football for Barcelona. [2]',
+    ]);
+    const v = await verifyAnswer(text, ctx, embedder, {
+      threshold: 0.65,
+      passThreshold: 0.8,
+      refusal: 'No.',
+    });
+    expect(v.sentences.map((s) => [s.citations, s.supported])).toEqual([
+      [[], false],
+      [[1], true],
+      [[2], true],
+    ]);
+  });
+
+  it('a citation group with no sentence before it is never counted as a sentence', () => {
+    const text = '## Answer\n[1]\n\n## Key points\n- Messi plays football for Barcelona.\n- [2]';
+    expect(answerSentences(text)).toEqual(['Messi plays football for Barcelona. [2]']);
+  });
 });
 
 const MODELS = {
@@ -169,6 +196,12 @@ const MODELS = {
       context_length: 1000000,
       pricing: { prompt: '0', completion: '0' },
       architecture: { output_modalities: ['audio'] },
+    },
+    {
+      id: 'free/song:free',
+      context_length: 1000000,
+      pricing: { prompt: '0', completion: '0' },
+      architecture: { output_modalities: ['text', 'audio'] },
     },
     { id: 'openrouter/free', context_length: 200000, pricing: { prompt: '0', completion: '0' } },
   ],
@@ -246,6 +279,29 @@ describe('OpenRouter client (no network)', () => {
       'X-OpenRouter-Title': APP_TITLE,
     });
     expect(res.text).toContain('## Answer');
+  });
+
+  it('auto-picks an official free variant over a larger zero-priced stealth or preview model, which stays pinnable', async () => {
+    const models = {
+      data: [
+        {
+          id: 'stealth/anon',
+          context_length: 1048576,
+          pricing: { prompt: '0', completion: '0' },
+          architecture: { output_modalities: ['text'] },
+        },
+        { id: 'free/big:free', context_length: 131072, pricing: { prompt: '0', completion: '0' } },
+      ],
+    };
+    const sent: string[] = [];
+    const fetchImpl = (async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/models')) return Response.json(models);
+      sent.push(JSON.parse(String(init?.body)).model);
+      return completion();
+    }) as unknown as typeof fetch;
+    await client(fetchImpl).complete(request);
+    await client(fetchImpl, { model: 'stealth/anon' }).complete(request);
+    expect(sent).toEqual(['free/big:free', 'stealth/anon']);
   });
 
   it('retries a 429 with backoff, then succeeds', async () => {

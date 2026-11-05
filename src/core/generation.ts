@@ -48,6 +48,21 @@ export function validateStructure(
 
 const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
 
+const CITATIONS_ONLY = /^(?:\s*\[\d+\])+\s*$/;
+
+/**
+ * 'fact. [n]' (the prompt's own format) is segmented as 'fact.' + '[n]': a citation-only segment is
+ * appended to the segment before it; one with nothing before it is dropped.
+ */
+function attachCitations(segments: string[]): string[] {
+  const out: string[] = [];
+  for (const s of segments) {
+    if (!CITATIONS_ONLY.test(s)) out.push(s);
+    else if (out.length > 0) out[out.length - 1] = `${out[out.length - 1]} ${s.trim()}`;
+  }
+  return out;
+}
+
 /** Sentences of the Answer section and one entry per Key points bullet. */
 export function answerSentences(text: string): string[] {
   const answer = markdownSection(text, 'Answer') ?? '';
@@ -59,7 +74,9 @@ export function answerSentences(text: string): string[] {
     .split('\n')
     .map((l) => l.replace(/^\s*[-*•]\s*/, '').trim())
     .filter(Boolean);
-  return [...sentences, ...bullets].filter((s) => /[\p{L}\p{N}]/u.test(s));
+  return [...attachCitations(sentences), ...attachCitations(bullets)].filter((s) =>
+    /[\p{L}\p{N}]/u.test(s),
+  );
 }
 
 export const isRefusal = (text: string, refusal: string) =>

@@ -21,12 +21,13 @@ import {
   rankedFor,
   syntheticSplit,
 } from '../core/evaluation.js';
+import { PassThroughReranker } from '../adapters/baselines.js';
 import { feedbackLabels, readFeedback, shouldPromote } from '../core/feedback.js';
 import { chunkBody } from '../core/generation.js';
 import { computeFeatures } from '../core/features.js';
 import { PATHS } from '../core/paths.js';
 import type { RetrievalDeps } from '../core/pipeline.js';
-import { dot } from '../core/ports.js';
+import { type Reranker, dot } from '../core/ports.js';
 import { createRag } from '../index.js';
 import { runCli } from './args.js';
 
@@ -113,7 +114,7 @@ runCli(async () => {
 
     const model = await trainRerankerModel(rows, labels, { epochs: 40 });
     const candidate = new TfjsReranker(model);
-    const scoreWith = async (reranker: TfjsReranker, set: EvalQuery[]) =>
+    const scoreWith = async (reranker: Reranker, set: EvalQuery[]) =>
       (await evaluateMode(set, 'rerank', { ...deps, reranker }, index, collection)).ndcgAt6;
     const candidateScore = {
       handNdcg6: await scoreWith(candidate, hand),
@@ -122,14 +123,15 @@ runCli(async () => {
 
     const root = path.join(PATHS.models, 'reranker');
     const currentV = currentVersion(root);
-    let currentScore: { handNdcg6: number; syntheticNdcg6: number } | null = null;
-    if (currentV) {
-      const current = await TfjsReranker.load(path.join(root, `v${currentV}`));
-      currentScore = {
-        handNdcg6: await scoreWith(current, hand),
-        syntheticNdcg6: await scoreWith(current, val),
-      };
-    }
+    // With no trained model yet, the bar is the pass-through baseline the pipeline uses today:
+    // a first model that ranks worse than plain fusion is not promoted.
+    const current = currentV
+      ? await TfjsReranker.load(path.join(root, `v${currentV}`))
+      : new PassThroughReranker();
+    const currentScore = {
+      handNdcg6: await scoreWith(current, hand),
+      syntheticNdcg6: await scoreWith(current, val),
+    };
     const promoted = shouldPromote(currentScore, candidateScore);
     const version = nextVersion(root);
     const dir = path.join(root, `v${version}`);
@@ -138,7 +140,7 @@ runCli(async () => {
       version,
       promoted,
       candidate: candidateScore,
-      current: currentScore ? { version: currentV, ...currentScore } : null,
+      current: { version: currentV ?? 'pass-through', ...currentScore },
       trainQueries: train.length,
       validationQueries: val.length,
       handQueries: hand.filter((q) => !q.outOfCorpus).length,
@@ -155,14 +157,18 @@ runCli(async () => {
     writeFileSync(path.join(root, 'synthetic-val.json'), `${JSON.stringify(val, null, 2)}\n`);
     if (promoted) setCurrentVersion(root, version);
 
-    // Calibration with the active reranker.
-    const active = await TfjsReranker.load(path.join(root, `v${currentVersion(root)}`));
-    const best = async (q: string) =>
-      (await rankedFor(q, 'rerank', { ...deps, reranker: active }, collection)).ranked[0]
-        ?.rerankScore ?? 0;
+    // Calibration with the active reranker. The pass-through baseline always gives the top chunk
+    // 1.0, so the evidence gate is only calibrated when a trained model is active.
+    const activeV = currentVersion(root);
     const answerable: number[] = [];
     const outOfCorpus: number[] = [];
-    for (const q of hand) (q.outOfCorpus ? outOfCorpus : answerable).push(await best(q.query));
+    if (activeV) {
+      const active = await TfjsReranker.load(path.join(root, `v${activeV}`));
+      const best = async (q: string) =>
+        (await rankedFor(q, 'rerank', { ...deps, reranker: active }, collection)).ranked[0]
+          ?.rerankScore ?? 0;
+      for (const q of hand) (q.outOfCorpus ? outOfCorpus : answerable).push(await best(q.query));
+    }
     const gate =
       answerable.length && outOfCorpus.length ? chooseThreshold(answerable, outOfCorpus) : null;
     const support = await sentenceSupportData(index, deps);
@@ -178,22 +184,22 @@ runCli(async () => {
     writeFileSync(CALIBRATION_FILE, `${JSON.stringify(calibration, null, 2)}\n`);
     writeFileSync(
       path.join(PATHS.models, 'calibration-data.json'),
-      `${JSON.stringify({ rerankerVersion: currentVersion(root), gate, gateScores: { answerable, outOfCorpus }, sentence, sentenceScores: support }, null, 2)}\n`,
+      `${JSON.stringify({ rerankerVersion: activeV, gate, gateScores: { answerable, outOfCorpus }, sentence, sentenceScores: support }, null, 2)}\n`,
     );
 
     const f = (n: number) => n.toFixed(4);
     process.stdout.write(
       [
-        `Reranker v${version}: ${promoted ? 'PROMOTED' : 'NOT promoted (worse than current)'}; active = v${currentVersion(root)}`,
+        `Reranker v${version}: ${promoted ? 'PROMOTED' : 'NOT promoted (worse than current)'}; active = ${activeV ? `v${activeV}` : 'pass-through baseline'}`,
         `training rows=${rows.length} (synthetic ${synthRows} from ${train.length} queries, feedback ${feedbackRows}), positives=${metrics.positives}`,
         `feedback records=${records.length}, skipped (deleted chunks)=${skipped}, not in pool=${feedbackMissing}`,
         `candidate nDCG@6: hand-written=${f(candidateScore.handNdcg6)} synthetic-val=${f(candidateScore.syntheticNdcg6)}`,
-        currentScore
-          ? `current v${currentV} nDCG@6: hand-written=${f(currentScore.handNdcg6)} synthetic-val=${f(currentScore.syntheticNdcg6)}`
-          : 'no current model',
+        `current ${currentV ? `v${currentV}` : 'pass-through baseline'} nDCG@6: hand-written=${f(currentScore.handNdcg6)} synthetic-val=${f(currentScore.syntheticNdcg6)}`,
         gate
           ? `evidence gate threshold=${f(gate.threshold)} (answerable ${gate.positives}, out-of-corpus ${gate.negatives}, pass rate ${f(gate.truePositiveRate)}, refuse rate ${f(gate.trueNegativeRate)}, separable=${gate.separable})`
-          : 'evidence gate not calibrated (the eval set needs answerable and out-of-corpus queries)',
+          : activeV
+            ? 'evidence gate not calibrated (the eval set needs answerable and out-of-corpus queries)'
+            : 'evidence gate not calibrated (no trained reranker is active)',
         `sentence support threshold=${f(sentence.threshold)} (supported ${sentence.positives}, unrelated ${sentence.negatives}, balanced accuracy ${f(sentence.balancedAccuracy)})`,
         '',
       ].join('\n'),

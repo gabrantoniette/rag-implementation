@@ -22,7 +22,10 @@ export interface Neo4jOptions {
   user: string;
   password: string;
   database?: string;
-  /** Vector and fulltext queries over-fetch by this factor before the collection filter. */
+  /**
+   * Vector and fulltext queries over-fetch by this factor before the collection filter (the first
+   * try; the fetch grows when fewer than k hits survive the filter).
+   */
   overFetch?: number;
 }
 
@@ -397,41 +400,63 @@ export class Neo4jStore implements VectorGraphStore {
     return plan;
   }
 
+  /**
+   * The index queries rank the whole index and the collection filter runs after them. A fixed
+   * over-fetch misses a collection that is a small share of the index (a 3-chunk collection next to
+   * 3,000 other chunks gets no hits), so the fetch grows until k hits survive the filter or the fetch
+   * covers every chunk.
+   */
+  private async filteredSearch(
+    query: string,
+    params: Record<string, unknown>,
+    k: number,
+    collection?: string,
+  ): Promise<SearchHit[]> {
+    let fetch = collection ? k * this.overFetch : k;
+    let total: number | null = null;
+    for (;;) {
+      const rows = await this.read<{ chunk: RawChunk; score: number }>(query, {
+        ...params,
+        fetch: neo4j.int(fetch),
+        collection: collection ?? null,
+        k: neo4j.int(k),
+      });
+      if (collection && rows.length < k) {
+        total ??= (await this.read<{ n: number }>('MATCH (c:Chunk) RETURN count(c) AS n'))[0]!.n;
+        if (fetch < total) {
+          fetch = Math.min(total, fetch * 4);
+          continue;
+        }
+      }
+      return rows.map((r) => ({ chunk: toChunk(r.chunk), score: r.score }));
+    }
+  }
+
   async vectorSearch(embedding: number[], k: number, collection?: string): Promise<SearchHit[]> {
-    const rows = await this.read<{ chunk: RawChunk; score: number }>(
+    return this.filteredSearch(
       `CALL db.index.vector.queryNodes($index, $fetch, $embedding) YIELD node AS c, score
        MATCH (d:Document)-[:HAS_CHUNK]->(c)
        WHERE $collection IS NULL OR d.collection = $collection
        RETURN ${CHUNK} AS chunk, score ORDER BY score DESC LIMIT $k`,
-      {
-        index: VECTOR_INDEX,
-        fetch: neo4j.int(collection ? k * this.overFetch : k),
-        embedding,
-        collection: collection ?? null,
-        k: neo4j.int(k),
-      },
+      { index: VECTOR_INDEX, embedding },
+      k,
+      collection,
     );
-    return rows.map((r) => ({ chunk: toChunk(r.chunk), score: r.score }));
   }
 
   /** Lucene query of the question's content terms (no special characters reach Lucene). */
   async fulltextSearch(query: string, k: number, collection?: string): Promise<SearchHit[]> {
     const terms = [...new Set(contentTerms(query))];
     if (terms.length === 0) return [];
-    const rows = await this.read<{ chunk: RawChunk; score: number }>(
+    return this.filteredSearch(
       `CALL db.index.fulltext.queryNodes($index, $q, {limit: $fetch}) YIELD node AS c, score
        MATCH (d:Document)-[:HAS_CHUNK]->(c)
        WHERE $collection IS NULL OR d.collection = $collection
        RETURN ${CHUNK} AS chunk, score ORDER BY score DESC LIMIT $k`,
-      {
-        index: FULLTEXT_INDEX,
-        q: terms.join(' '),
-        fetch: neo4j.int(collection ? k * this.overFetch : k),
-        collection: collection ?? null,
-        k: neo4j.int(k),
-      },
+      { index: FULLTEXT_INDEX, q: terms.join(' ') },
+      k,
+      collection,
     );
-    return rows.map((r) => ({ chunk: toChunk(r.chunk), score: r.score }));
   }
 
   async getChunksByIds(ids: string[]): Promise<RetrievedChunk[]> {

@@ -76,7 +76,7 @@ async function defaultReranker(logger: Logger): Promise<Reranker> {
   const dir = activeModelDir('reranker');
   if (!dir) {
     logger.info(
-      'No trained reranker yet (npm run train:reranker); using the pass-through baseline',
+      'No promoted reranker (npm run train:reranker promotes one only if it beats the current ranking); using the pass-through baseline',
     );
     return new PassThroughReranker();
   }

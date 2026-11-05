@@ -152,3 +152,36 @@ export function syntheticSplit(index: ChunkIndex) {
     train: all.slice(SYNTHETIC_VAL, SYNTHETIC_VAL + SYNTHETIC_TRAIN),
   };
 }
+
+export interface EvidenceOutcome {
+  refused: boolean;
+  rawAnswer: string;
+  citationCount: number;
+  verification?: { invalidCitations: number[]; groundingScore: number };
+}
+
+/**
+ * Pass/fail criteria of one live evidence question. An answerable question must be answered: a
+ * refusal fails it even when the expected words happen to appear in the refusal text.
+ */
+export function evidenceCriteria(
+  q: { must_refuse: boolean; expected_facts: { match: string[] }[] },
+  o: EvidenceOutcome,
+  groundingPassThreshold: number,
+): { criteria: Record<string, boolean>; factsFound: boolean[]; pass: boolean } {
+  const answer = o.rawAnswer.toLowerCase();
+  const factsFound = q.expected_facts.map((f) =>
+    f.match.every((m) => answer.includes(m.toLowerCase())),
+  );
+  const v = o.verification;
+  const criteria: Record<string, boolean> = q.must_refuse
+    ? { refused: o.refused }
+    : {
+        answered: !o.refused,
+        atLeastOneCitation: o.citationCount >= 1,
+        allCitationsExist: !!v && v.invalidCitations.length === 0,
+        grounding80: !!v && v.groundingScore >= groundingPassThreshold,
+        expectedFacts: factsFound.every(Boolean),
+      };
+  return { criteria, factsFound, pass: Object.values(criteria).every(Boolean) };
+}
