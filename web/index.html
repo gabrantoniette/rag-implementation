@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ask · rag-implementation</title>
+    <meta
+      name="description"
+      content="Local chat for the rag-implementation GraphRAG agent: every answer checked sentence by sentence against its sources."
+    />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#e2e5e9" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%23fcfcfa'/%3E%3Cpath d='M4.5 13c1.6 1.2 3 2.9 4.3 5.2 2.6-5.6 6.3-10.2 11.7-14' fill='none' stroke='%232f56c4' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+    <link
+      rel="preload"
+      href="/fonts/source-serif-4-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/app.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#question">Skip to the question</a>
+    <div class="desk">
+      <main class="galley" id="galley">
+        <header class="slug" id="slug">
+          <span class="slug-item slug-name">rag-implementation</span>
+          <span class="slug-item">Loading models and connecting to the database…</span>
+        </header>
+        <h1 class="visually-hidden">Ask the corpus</h1>
+        <div class="takes" id="takes"></div>
+        <form class="composer" id="composer" autocomplete="off" novalidate>
+          <div class="composer-line row">
+            <label class="visually-hidden" for="question">Question</label>
+            <textarea
+              id="question"
+              name="question"
+              rows="1"
+              maxlength="1000"
+              placeholder="Ask the corpus a question"
+              aria-describedby="mode-note"
+              disabled
+            ></textarea>
+            <button class="ask" id="ask" type="submit" disabled>Ask</button>
+          </div>
+          <div class="composer-options row">
+            <fieldset class="modes" id="modes">
+              <legend class="visually-hidden">Pipeline mode</legend>
+            </fieldset>
+            <label class="toggle" for="retrieval-only">
+              <input type="checkbox" id="retrieval-only" />
+              <span>Retrieval only</span>
+            </label>
+          </div>
+          <div class="composer-notes row">
+            <p class="mode-note" id="mode-note"></p>
+            <p class="memory" id="memory"></p>
+          </div>
+        </form>
+      </main>
+      <aside
+        class="desk-slips"
+        id="desk-slips"
+        aria-label="Sources for the selected answer"
+      ></aside>
+    </div>
+    <p class="visually-hidden" id="announcer" role="status" aria-live="polite"></p>
+  </body>
+</html>

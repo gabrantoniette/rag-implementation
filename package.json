@@ -17,6 +17,7 @@
     "train:intent": "node scripts/tsx.mjs src/cli/train-intent.ts",
     "train:reranker": "node scripts/tsx.mjs src/cli/train-reranker.ts",
     "ask": "node scripts/tsx.mjs src/cli/ask.ts",
+    "chat": "node scripts/tsx.mjs src/cli/chat.ts",
     "feedback": "node scripts/tsx.mjs src/cli/feedback.ts",
     "eval:retrieval": "node scripts/tsx.mjs src/cli/eval-retrieval.ts",
     "evidence": "node scripts/tsx.mjs src/cli/evidence.ts",
