@@ -7,8 +7,20 @@ import { SECRET_PATTERNS as PATTERNS } from './secret-patterns.js';
 export const GITLEAKS_IMAGE = 'zricethezav/gitleaks:v8.30.1';
 
 /** Emails that are not personal data: example domains and the commit co-author trailer. */
-/** Fake values that unit tests use on purpose (only allowed inside tests/). */
-const TEST_FIXTURE_VALUES = ['my-neo4j-password', 'glsa_ABCDEFGHIJKLMNOPQRSTUVWX_1234'];
+/**
+ * Fake values that unit tests use on purpose, allowed only in FIXTURE_PATHS. Built by joining
+ * parts so this file itself never contains a credential-shaped literal.
+ */
+const TEST_FIXTURE_VALUES = [
+  'my-neo4j-password',
+  ['glsa', 'ABCDEFGHIJKLMNOPQRSTUVWX', '1234'].join('_'),
+];
+
+/**
+ * Where fixture values may appear: tests, plans (they quote the tests they ask for) and this
+ * scanner (an older commit declared the fake token here as a literal; see .gitleaksignore).
+ */
+const FIXTURE_PATHS = ['tests/', 'docs/superpowers/plans/', 'src/cli/scan-secrets.ts'];
 
 const EMAIL_ALLOWLIST = [/@example\.(?:org|com|net)$/i, /^noreply@anthropic\.com$/i];
 
@@ -32,9 +44,8 @@ const mask = (s: string) => (s.length <= 6 ? '***' : `${s.slice(0, 3)}***${s.sli
 
 function scanText(text: string, where: string, literals: string[], findings: Finding[]) {
   let file = where; // history diffs: the current file comes from the '+++ b/<path>' headers
-  // Plans quote the tests they ask for, so the same fixture values are allowed there too.
   const fixture = (value: string) =>
-    (file.startsWith('tests/') || file.startsWith('docs/superpowers/plans/')) &&
+    FIXTURE_PATHS.some((p) => file.startsWith(p)) &&
     TEST_FIXTURE_VALUES.some((v) => value.includes(v));
   text.split('\n').forEach((line, i) => {
     if (line.startsWith('+++ b/')) file = line.slice(6);

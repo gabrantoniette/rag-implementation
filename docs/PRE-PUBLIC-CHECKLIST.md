@@ -19,9 +19,14 @@ one to public).
 - [ ] `npm run scan:secrets` reports `TOTAL FINDINGS: 0` (gitleaks plus the regex scan of tracked
       files and the whole history).
 - [ ] `git status --ignored` shows `.env`, `data/raw`, `data/cache`, `data/usage.json`,
-      `data/feedback.jsonl`, `.cache` and `.neo4j-data` as ignored, never staged.
-- [ ] `.env.example` still has empty values for `OPENROUTER_API_KEY`, `NEO4J_PASSWORD` and
-      `WIKIMEDIA_CONTACT`.
+      `data/feedback.jsonl`, `.cache`, `.neo4j-data`, `.loki-data`, `.grafana-data` and
+      `.playwright-mcp` as ignored, never staged.
+- [ ] `.env.example` still has empty values for `OPENROUTER_API_KEY`, `NEO4J_PASSWORD`,
+      `WIKIMEDIA_CONTACT`, `GRAFANA_ADMIN_PASSWORD` and `GRAFANA_SERVICE_ACCOUNT_TOKEN`. Your own
+      `.env` holds the Grafana admin password and the Viewer token for the Grafana MCP: never copy
+      them into `.mcp.json` or any tracked file.
+- [ ] `docs/evidence/mcp-*.md` and `tests/fixtures/mcp/query-loki-logs.json` hold logged questions
+      and answers from the evaluation run; skim them once.
 - [ ] `docs/evidence/` and `docs/project-record/` contain no key, email or personal data (they are
       generated from command output; skim them once).
 

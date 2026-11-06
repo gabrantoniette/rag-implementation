@@ -1,10 +1,23 @@
 {
-  "grafana": { "visibleMs": 10000, "callP95Ms": 3000, "startMs": 30000 },
+  "grafana": { "visibleMs": 5000, "callP95Ms": 1000, "startMs": 10000 },
   "playwright": {
-    "totalMs": 60000,
+    "totalMs": 20000,
     "toolCalls": 12,
-    "startMs": 30000,
+    "startMs": 10000,
     "consoleErrors": 0,
     "apiFailures": 0
+  },
+  "calibration": {
+    "date": "2026-11-06",
+    "rule": "new limit = max(2 x the first measured value, a floor set by how the stack works); counts that the scenario fixes stay as they were",
+    "notes": [
+      "grafana.visibleMs 10000 -> 5000 (measured 1090 ms; floor 5000: the transport flushes every 1 s, Loki ingests, and the scenario polls every 500 ms)",
+      "grafana.callP95Ms 3000 -> 1000 (measured 156 ms; floor 1000)",
+      "grafana.startMs 30000 -> 10000 (measured 972 ms; floor 10000 for a cold docker run of the MCP container)",
+      "playwright.startMs 30000 -> 10000 (measured 1482 ms; floor 10000 for a cold Chrome start)",
+      "playwright.totalMs 60000 -> 20000 (measured 5512 ms with the mock LLM; floor 20000)",
+      "playwright.toolCalls 12 unchanged (the scenario always makes 8 calls)",
+      "consoleErrors and apiFailures stay 0: any console error or failing /api/ request is a real failure"
+    ]
   }
 }

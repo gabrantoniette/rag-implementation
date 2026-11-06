@@ -30,4 +30,6 @@ export interface Thresholds {
     consoleErrors: number;
     apiFailures: number;
   };
+  /** How and why the limits were last recalibrated; copied into every report. */
+  calibration?: { date: string; rule: string; notes: string[] };
 }

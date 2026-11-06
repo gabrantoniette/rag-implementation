@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { projectPath } from '../../src/core/paths.js';
 import { measure, summarize } from '../../src/mcp-eval/metrics.js';
-import { findRef, isWriteTool } from '../../src/mcp-eval/parse.js';
+import { findRef, isWriteTool, lokiLines } from '../../src/mcp-eval/parse.js';
 import { uncovered } from '../../src/mcp-eval/preflight.js';
 import { headerFindings, loopbackFindings, parseComposePs } from '../../src/mcp-eval/security.js';
 import { startChatServer } from '../../src/web/server.js';
@@ -107,5 +107,15 @@ describe('parsers', () => {
     expect(isWriteTool('create_incident')).toBe(true);
     expect(isWriteTool('query_loki_logs')).toBe(false);
     expect(isWriteTool('list_datasources')).toBe(false);
+  });
+});
+
+describe('lokiLines (real query_loki_logs response)', () => {
+  it('extracts the shipped ask.completed line from the captured response', () => {
+    const response = JSON.parse(fixture('query-loki-logs.json')) as Parameters<typeof lokiLines>[0];
+    const lines = lokiLines(response);
+    expect(lines).toHaveLength(1);
+    expect(lines[0]).toContain('"event":"ask.completed"');
+    expect(JSON.parse(lines[0]!).question).toMatch(/\(mcp-eval-[0-9a-f-]{36}\)$/);
   });
 });
