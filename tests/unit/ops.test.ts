@@ -21,6 +21,20 @@ describe('docker-compose: local services stay on loopback', () => {
     }
   });
 
+  it('provisions a dashboard whose every query targets Loki and hides eval traffic', () => {
+    const dash = JSON.parse(
+      readFileSync(projectPath('ops/grafana/dashboards/rag-observability.json'), 'utf8'),
+    );
+    expect(dash.uid).toBe('rag-observability');
+    expect(dash.refresh).toBe('10s');
+    const targets = dash.panels.flatMap((p: { targets?: unknown[] }) => p.targets ?? []);
+    expect(targets.length).toBeGreaterThanOrEqual(6);
+    for (const t of targets as { datasource: { uid: string }; expr: string }[]) {
+      expect(t.datasource.uid).toBe('loki');
+      expect(t.expr).toContain('env!="eval"');
+    }
+  });
+
   it('sets 168h retention in the Loki config', () => {
     const loki = readFileSync(projectPath('ops', 'loki', 'loki.yaml'), 'utf8');
     expect(loki).toMatch(/retention_period:\s*168h/);

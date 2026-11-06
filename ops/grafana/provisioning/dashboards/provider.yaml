@@ -1,0 +1,13 @@
+# Dashboards live in the repository (ops/grafana/dashboards); edits in the UI are not saved.
+apiVersion: 1
+
+providers:
+  - name: rag
+    orgId: 1
+    folder: RAG
+    type: file
+    disableDeletion: true
+    allowUiUpdates: false
+    updateIntervalSeconds: 30
+    options:
+      path: /var/lib/grafana/dashboards
