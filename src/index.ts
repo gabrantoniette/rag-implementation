@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { PassThroughReranker, RuleIntentClassifier } from './adapters/baselines.js';
 import { TransformersEmbedder } from './adapters/embedder.js';
 import { NerExtractor, WikiLinkExtractor } from './adapters/entities.js';
+import { LokiTransport } from './adapters/loki.js';
 import { InMemoryStore } from './adapters/memory-store.js';
 import { MockLlmClient } from './adapters/mock-llm.js';
 import { Neo4jStore } from './adapters/neo4j-store.js';
@@ -51,6 +52,8 @@ export const CreateRagConfigSchema = z.object({
   entityExtractor: custom<EntityExtractor>().optional(),
   /** Video keyframe analysis (default true). */
   visual: z.boolean().default(true),
+  /** service label on log lines shipped to Loki (when LOKI_URL is set). */
+  service: z.enum(['rag-cli', 'rag-chat']).default('rag-cli'),
   logger: custom<Logger>().optional(),
 });
 export type CreateRagConfig = z.input<typeof CreateRagConfigSchema>;
@@ -107,7 +110,17 @@ export async function createRag(input: CreateRagConfig = {}): Promise<RagInstanc
   });
   const { env, parameters, domain } = config;
   const logger =
-    options.logger ?? createLogger({ level: env.LOG_LEVEL, secrets: secretValues(env) });
+    options.logger ??
+    createLogger({
+      level: env.LOG_LEVEL,
+      secrets: secretValues(env),
+      ...(env.LOKI_URL
+        ? {
+            transport: new LokiTransport({ url: env.LOKI_URL }),
+            labels: { service: options.service, domain: domain.name, env: env.LOG_ENV },
+          }
+        : {}),
+    });
 
   let store: VectorGraphStore;
   if (options.store === 'memory') store = new InMemoryStore();

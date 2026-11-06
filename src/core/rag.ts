@@ -205,6 +205,8 @@ export function buildRag(deps: RagDeps): Rag {
       await deps.onClose?.();
       await deps.store.close();
       await deps.embedder.close();
+      // Last, so lines logged while closing still reach the transport (Loki).
+      await deps.logger.close?.();
     },
   };
 }

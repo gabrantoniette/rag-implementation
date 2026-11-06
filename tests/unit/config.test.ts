@@ -52,4 +52,23 @@ describe('config', () => {
     expect(APP_TITLE.length).toBeGreaterThan(0);
     expect(APP_URL).toBe('https://github.com/gabrantoniette/rag-implementation');
   });
+
+  it('treats the Grafana admin password and service account token as secrets', () => {
+    const env = parseEnv({
+      GRAFANA_ADMIN_PASSWORD: 'admin-pass-123456',
+      GRAFANA_SERVICE_ACCOUNT_TOKEN: 'glsa_tokenvalue',
+    });
+    expect(secretValues(env)).toEqual(
+      expect.arrayContaining(['admin-pass-123456', 'glsa_tokenvalue']),
+    );
+  });
+
+  it('parses LOKI_URL and LOG_ENV with defaults', () => {
+    expect(parseEnv({}).LOKI_URL).toBe('');
+    expect(parseEnv({}).LOG_ENV).toBe('dev');
+    expect(parseEnv({ LOKI_URL: 'http://127.0.0.1:3100', LOG_ENV: 'eval' })).toMatchObject({
+      LOKI_URL: 'http://127.0.0.1:3100',
+      LOG_ENV: 'eval',
+    });
+  });
 });

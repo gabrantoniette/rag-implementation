@@ -19,6 +19,18 @@ export const EnvSchema = z.object({
   FFMPEG_PATH: optional(z.string().default('')),
   DOMAIN_DIR: optional(z.string().default('domains')),
   LOG_LEVEL: optional(z.enum(['debug', 'info', 'warn', 'error']).default('info')),
+  /** Loki base URL; empty keeps logs on the terminal only. */
+  LOKI_URL: optional(z.string().default('')),
+  /** The env label on shipped log lines (dev, eval, ...): short, lowercase, low cardinality. */
+  LOG_ENV: optional(
+    z
+      .string()
+      .regex(/^[a-z0-9_-]{1,32}$/)
+      .default('dev'),
+  ),
+  /** Read only so the logger can scrub them; the application never uses them. */
+  GRAFANA_ADMIN_PASSWORD: optional(z.string().default('')),
+  GRAFANA_SERVICE_ACCOUNT_TOKEN: optional(z.string().default('')),
   MAX_FILE_MB: optional(z.coerce.number().positive().default(50)),
   /** true (default): send the whole prompt as one user message; some free models reject 'system'. */
   PROMPT_SINGLE_USER_MESSAGE: optional(
@@ -209,5 +221,10 @@ export function loadConfig(options: LoadConfigOptions = {}): AppConfig {
 
 /** Exact secret values the logger must scrub. */
 export function secretValues(env: Env): string[] {
-  return [env.OPENROUTER_API_KEY, env.NEO4J_PASSWORD].filter((s) => s.length > 0);
+  return [
+    env.OPENROUTER_API_KEY,
+    env.NEO4J_PASSWORD,
+    env.GRAFANA_ADMIN_PASSWORD,
+    env.GRAFANA_SERVICE_ACCOUNT_TOKEN,
+  ].filter((s) => s.length > 0);
 }
