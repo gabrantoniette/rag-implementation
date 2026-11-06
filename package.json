@@ -11,6 +11,8 @@
   "scripts": {
     "db:up": "docker compose up -d --wait",
     "db:down": "docker compose down",
+    "obs:up": "node scripts/tsx.mjs src/cli/obs.ts up",
+    "obs:down": "node scripts/tsx.mjs src/cli/obs.ts down",
     "ingest:fetch": "node scripts/tsx.mjs src/cli/ingest-fetch.ts",
     "ingest:build": "node scripts/tsx.mjs src/cli/ingest-build.ts",
     "docs": "node scripts/tsx.mjs src/cli/docs.ts",
