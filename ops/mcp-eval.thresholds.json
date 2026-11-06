@@ -1,0 +1,10 @@
+{
+  "grafana": { "visibleMs": 10000, "callP95Ms": 3000, "startMs": 30000 },
+  "playwright": {
+    "totalMs": 60000,
+    "toolCalls": 12,
+    "startMs": 30000,
+    "consoleErrors": 0,
+    "apiFailures": 0
+  }
+}

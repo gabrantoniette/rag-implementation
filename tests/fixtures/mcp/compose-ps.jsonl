@@ -1,0 +1,3 @@
+{"Service":"grafana","Name":"rag-implementation-grafana","State":"running","Publishers":[{"URL":"127.0.0.1","TargetPort":3000,"PublishedPort":3000,"Protocol":"tcp"}]}
+{"Service":"loki","Name":"rag-implementation-loki","State":"running","Publishers":[{"URL":"127.0.0.1","TargetPort":3100,"PublishedPort":3100,"Protocol":"tcp"}]}
+{"Service":"neo4j","Name":"rag-implementation-neo4j","State":"running","Publishers":[{"URL":"127.0.0.1","TargetPort":7474,"PublishedPort":7474,"Protocol":"tcp"},{"URL":"127.0.0.1","TargetPort":7687,"PublishedPort":7687,"Protocol":"tcp"}]}
