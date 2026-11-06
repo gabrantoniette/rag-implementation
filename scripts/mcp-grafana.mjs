@@ -17,6 +17,14 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const GRAFANA_MCP_IMAGE = 'grafana/mcp-grafana:2.1.1';
 
 /**
+ * The container joins the compose network (name pinned in docker-compose.yml) and reaches Grafana
+ * by its service name. host.docker.internal is avoided: it does not exist on Docker Engine for
+ * Linux, and a port published on the host's 127.0.0.1 is unreachable from a container anyway.
+ */
+export const COMPOSE_NETWORK = 'rag-implementation';
+export const DEFAULT_GRAFANA_URL = 'http://grafana:3000';
+
+/**
  * Tool categories turned off, taken from `docker run grafana/mcp-grafana:2.1.1 --help`. Kept on:
  * search, datasource, loki, dashboard, navigation, query and examples (what log reading needs).
  */
@@ -61,6 +69,10 @@ export function dockerArgs() {
     'run',
     '--rm',
     '-i',
+    '--network',
+    COMPOSE_NETWORK,
+    '--memory',
+    '256m',
     '-e',
     'GRAFANA_URL',
     '-e',
@@ -86,7 +98,7 @@ function readEnvFile() {
 function main() {
   const fromFile = readEnvFile();
   const token = process.env.GRAFANA_SERVICE_ACCOUNT_TOKEN || fromFile.GRAFANA_SERVICE_ACCOUNT_TOKEN;
-  const url = process.env.GRAFANA_URL || fromFile.GRAFANA_URL || 'http://host.docker.internal:3000';
+  const url = process.env.GRAFANA_URL || fromFile.GRAFANA_URL || DEFAULT_GRAFANA_URL;
   if (!token) {
     process.stderr.write('GRAFANA_SERVICE_ACCOUNT_TOKEN is empty. Run npm run obs:token.\n');
     process.exit(1);

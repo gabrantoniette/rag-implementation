@@ -6,7 +6,7 @@ import { upsertEnvLine } from '../../src/cli/env-file.js';
 import { secretRulesIn } from '../../src/cli/secret-patterns.js';
 import { PROJECT_ROOT, projectPath } from '../../src/core/paths.js';
 // @ts-expect-error plain JavaScript launcher without type declarations
-import { GRAFANA_MCP_IMAGE, dockerArgs } from '../../scripts/mcp-grafana.mjs';
+import { DEFAULT_GRAFANA_URL, GRAFANA_MCP_IMAGE, dockerArgs } from '../../scripts/mcp-grafana.mjs';
 
 const tmp = projectPath('.cache', 'tmp', 'mcp-wrappers');
 mkdirSync(tmp, { recursive: true });
@@ -72,5 +72,18 @@ describe('MCP launchers', () => {
       'grafana-service-account-token',
     );
     expect(secretRulesIn('nothing secret here')).toEqual([]);
+  });
+
+  it('runs the Grafana MCP on the fixed compose network with a memory limit (works on Linux too)', () => {
+    const args: string[] = dockerArgs();
+    expect(args[args.indexOf('--network') + 1]).toBe('rag-implementation');
+    expect(args[args.indexOf('--memory') + 1]).toMatch(/^\d+m$/);
+    expect(args.indexOf('--network')).toBeLessThan(args.indexOf(GRAFANA_MCP_IMAGE));
+    expect(DEFAULT_GRAFANA_URL).toBe('http://grafana:3000');
+  });
+
+  it('pins the compose network name so it does not depend on the clone folder', () => {
+    const compose = readFileSync(projectPath('docker-compose.yml'), 'utf8');
+    expect(compose).toMatch(/^networks:\r?\n {2}default:\r?\n {4}name: rag-implementation$/m);
   });
 });
