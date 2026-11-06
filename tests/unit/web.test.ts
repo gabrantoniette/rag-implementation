@@ -1,4 +1,5 @@
 import { mkdirSync } from 'node:fs';
+import { request as httpRequest } from 'node:http';
 import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { type TransportEntry, createLogger } from '../../src/core/logger.js';
@@ -285,5 +286,71 @@ describe('chat server logging when the library fails to load (review fix)', () =
     } finally {
       await failing.close();
     }
+  });
+});
+
+describe('chat server request gate (review fix)', () => {
+  let gated: ChatServer;
+  beforeAll(async () => {
+    gated = await startChatServer({ createRag: () => toyRag(confident), lastAskFile: null });
+  });
+  afterAll(async () => {
+    await gated.close();
+  });
+
+  const clientLog = (headers: Record<string, string>, body = '{"message":"x"}') =>
+    fetch(new URL('/api/client-log', gated.url), { method: 'POST', headers, body });
+
+  /** node:http, because fetch does not let a caller set the Host header. */
+  const withHost = (host: string) =>
+    new Promise<number>((resolve, reject) => {
+      const url = new URL(gated.url);
+      const req = httpRequest(
+        { hostname: url.hostname, port: url.port, path: '/api/status', headers: { host } },
+        (res) => {
+          res.resume();
+          resolve(res.statusCode ?? 0);
+        },
+      );
+      req.on('error', reject);
+      req.end();
+    });
+
+  it('rejects a POST from another origin', async () => {
+    const res = await clientLog({
+      'content-type': 'application/json',
+      origin: 'http://evil.example',
+    });
+    expect(res.status).toBe(403);
+    expect(((await res.json()) as { kind: string }).kind).toBe('forbidden');
+  });
+
+  it('rejects a cross-site POST flagged by the browser', async () => {
+    const res = await clientLog({
+      'content-type': 'application/json',
+      'sec-fetch-site': 'cross-site',
+    });
+    expect(res.status).toBe(403);
+  });
+
+  it('rejects a POST that is not JSON (the no-preflight form)', async () => {
+    const res = await clientLog({ 'content-type': 'text/plain' });
+    expect(res.status).toBe(415);
+  });
+
+  it('rejects a request for a foreign Host (DNS rebinding)', async () => {
+    expect(await withHost('evil.example')).toBe(403);
+    expect(await withHost(`127.0.0.1:${new URL(gated.url).port}`)).toBe(200);
+    expect(await withHost(`localhost:${new URL(gated.url).port}`)).toBe(200);
+  });
+
+  it('accepts a same-origin POST from the page', async () => {
+    const origin = gated.url.replace(/\/$/, '');
+    const res = await clientLog({
+      'content-type': 'application/json',
+      origin,
+      'sec-fetch-site': 'same-origin',
+    });
+    expect(res.status).toBe(204);
   });
 });

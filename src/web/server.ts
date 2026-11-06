@@ -84,6 +84,7 @@ export interface ErrorBody {
     | 'config'
     | 'not-found'
     | 'rate-limit'
+    | 'forbidden'
     | 'internal';
   hint?: string;
 }
@@ -136,6 +137,40 @@ export function describeError(error: unknown): { status: number; body: ErrorBody
       },
     };
   return { status: 500, body: { error: e?.message ?? String(error), kind: 'internal' } };
+}
+
+/**
+ * Only the chat page itself may use the API. Any website the user has open could otherwise POST
+ * to 127.0.0.1 (a "simple" text/plain request needs no CORS preflight) and spend quota or write
+ * log lines that an agent later reads through the Grafana MCP. Checks, in order:
+ * - Host is 127.0.0.1:<port> or localhost:<port> (blocks DNS rebinding), on every request;
+ * - on POST: Origin, when sent, is this server's own origin; Sec-Fetch-Site, when sent, is
+ *   same-origin or none; and the body is declared as application/json.
+ */
+export function requestGate(
+  req: IncomingMessage,
+  port: number,
+): { status: number; body: ErrorBody } | null {
+  const forbidden = (error: string) => ({
+    status: 403,
+    body: { error, kind: 'forbidden' as const },
+  });
+  const hosts = [`127.0.0.1:${port}`, `localhost:${port}`];
+  if (!hosts.includes((req.headers.host ?? '').toLowerCase()))
+    return forbidden('Unknown Host header; open the page at http://127.0.0.1.');
+  if (req.method !== 'POST') return null;
+  const origin = req.headers.origin;
+  if (origin !== undefined && !hosts.some((h) => origin.toLowerCase() === `http://${h}`))
+    return forbidden('Cross-origin requests are not accepted.');
+  const site = req.headers['sec-fetch-site'];
+  if (site !== undefined && site !== 'same-origin' && site !== 'none')
+    return forbidden('Cross-site requests are not accepted.');
+  if (!(req.headers['content-type'] ?? '').toLowerCase().startsWith('application/json'))
+    return {
+      status: 415,
+      body: { error: 'Send the request body as application/json.', kind: 'input' },
+    };
+  return null;
 }
 
 async function readJson(req: IncomingMessage, limit = 64 * 1024): Promise<unknown> {
@@ -375,6 +410,17 @@ export async function startChatServer(options: ChatServerOptions): Promise<ChatS
     const route = `${req.method} ${url.pathname}`;
     const started = performance.now();
     let askQuestion: string | undefined;
+    const gate = requestGate(req, (server.address() as AddressInfo).port);
+    if (gate) {
+      log()?.warn('request refused', {
+        event: 'http.refused',
+        method: req.method,
+        route: url.pathname,
+        status: gate.status,
+        reason: gate.body.error,
+      });
+      return send(res, gate.status, gate.body);
+    }
     res.on('finish', () => {
       const level = res.statusCode >= 500 ? 'warn' : 'info';
       log()?.[level]('http request', {
