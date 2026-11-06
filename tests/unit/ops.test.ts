@@ -42,3 +42,20 @@ describe('docker-compose: local services stay on loopback', () => {
     expect(loki).toMatch(/auth_enabled:\s*false/);
   });
 });
+
+describe('dashboard filters (review fix)', () => {
+  it('lets the log panel be filtered by service and level', () => {
+    const dash = JSON.parse(
+      readFileSync(projectPath('ops/grafana/dashboards/rag-observability.json'), 'utf8'),
+    ) as {
+      templating: { list: { name: string; includeAll: boolean }[] };
+      panels: { title: string; targets: { expr: string }[] }[];
+    };
+    const vars = dash.templating.list.map((v) => v.name);
+    expect(vars).toEqual(expect.arrayContaining(['service', 'level']));
+    expect(dash.templating.list.every((v) => v.includeAll)).toBe(true);
+    const logs = dash.panels.find((p) => p.title === 'Logs')!.targets[0]!.expr;
+    expect(logs).toContain('service=~"$service"');
+    expect(logs).toContain('level=~"$level"');
+  });
+});

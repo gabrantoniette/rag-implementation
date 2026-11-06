@@ -9,6 +9,30 @@
   "refresh": "10s",
   "time": { "from": "now-1h", "to": "now" },
   "schemaVersion": 39,
+  "templating": {
+    "list": [
+      {
+        "name": "service",
+        "label": "Service",
+        "type": "custom",
+        "query": "rag-cli,rag-chat,rag-browser",
+        "multi": true,
+        "includeAll": true,
+        "allValue": "rag-.*",
+        "current": { "text": "All", "value": "$__all" }
+      },
+      {
+        "name": "level",
+        "label": "Level",
+        "type": "custom",
+        "query": "debug,info,warn,error",
+        "multi": true,
+        "includeAll": true,
+        "allValue": ".+",
+        "current": { "text": "All", "value": "$__all" }
+      }
+    ]
+  },
   "panels": [
     {
       "id": 1,
@@ -27,7 +51,7 @@
           "refId": "A",
           "datasource": { "type": "loki", "uid": "loki" },
           "queryType": "range",
-          "expr": "{service=~\"rag-.*\", env!=\"eval\"} | json"
+          "expr": "{service=~\"$service\", level=~\"$level\", env!=\"eval\"} | json"
         }
       ]
     },

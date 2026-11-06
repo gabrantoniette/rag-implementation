@@ -71,5 +71,6 @@ services:
       test: ['CMD-SHELL', 'wget -qO- http://localhost:3000/api/health || exit 1']
       interval: 5s
       timeout: 5s
-      retries: 30
-      start_period: 15s
+      retries: 60
+      # Grafana took ~4 min to start with 0.5 GB of host RAM free (2026-11-06); --wait must not give up first.
+      start_period: 180s
