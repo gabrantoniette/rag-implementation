@@ -233,7 +233,23 @@ export async function createRag(input: CreateRagConfig = {}): Promise<RagInstanc
       await Promise.allSettled([ocr.close(), captioner.close(), ner.close(), asr.close()]);
     },
   });
-  return { ...rag, config, store, embedder, logger, reranker, intent, llm };
+  // Whoever creates a logger closes it: only the one built here (with its Loki transport) is
+  // closed, last, so lines logged while closing still ship. A caller's own logger is left open.
+  const ownsLogger = options.logger === undefined;
+  return {
+    ...rag,
+    async close() {
+      await rag.close();
+      if (ownsLogger) await logger.close?.();
+    },
+    config,
+    store,
+    embedder,
+    logger,
+    reranker,
+    intent,
+    llm,
+  };
 }
 
 export type { Rag, AskOptions, AskResult } from './core/rag.js';

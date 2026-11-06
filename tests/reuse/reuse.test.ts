@@ -59,4 +59,29 @@ describe('reuse: the core works for any domain', () => {
       await rag.close();
     }
   });
+
+  it('does not close a logger the caller passed in (the caller owns it)', async () => {
+    let closed = 0;
+    const logger = {
+      debug: () => {},
+      info: () => {},
+      warn: () => {},
+      error: () => {},
+      close: async () => void closed++,
+    };
+    const rag = await createRag({
+      env: {},
+      domainDir: 'domains/_template',
+      store: 'memory',
+      embedder: new HashEmbedder(),
+      tokens: approximateTokenCounter,
+      llm: 'mock',
+      intent: 'rules',
+      reranker: 'pass-through',
+      entityExtractor: capitalizedEntities,
+      logger,
+    });
+    await rag.close();
+    expect(closed).toBe(0);
+  });
 });
