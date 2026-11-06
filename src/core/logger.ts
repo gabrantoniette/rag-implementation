@@ -21,6 +21,36 @@ export function redact(text: string, secrets: readonly string[] = []): string {
   return out;
 }
 
+/** One finished log line for a remote store (Loki): labels index it, line holds the JSON. */
+export interface TransportEntry {
+  timeMs: number;
+  labels: Record<string, string>;
+  line: string;
+}
+
+/** Where log lines go besides the terminal. send() never throws and never blocks the caller. */
+export interface LogTransport {
+  send(entry: TransportEntry): void;
+  close(): Promise<void>;
+}
+
+/** Longest text field kept in a shipped log line (characters). */
+export const MAX_FIELD_CHARS = 32_768;
+
+/** Cuts string fields longer than MAX_FIELD_CHARS and marks the record with truncated: true. */
+export function truncateFields(data: Record<string, unknown>): Record<string, unknown> {
+  let truncated = false;
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (typeof value === 'string' && value.length > MAX_FIELD_CHARS) {
+      out[key] = value.slice(0, MAX_FIELD_CHARS);
+      truncated = true;
+    } else out[key] = value;
+  }
+  if (truncated) out.truncated = true;
+  return out;
+}
+
 export interface Logger {
   debug(message: string, data?: unknown): void;
   info(message: string, data?: unknown): void;
