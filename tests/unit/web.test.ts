@@ -1,6 +1,7 @@
 import { mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { type TransportEntry, createLogger } from '../../src/core/logger.js';
 import { projectPath } from '../../src/core/paths.js';
 import type { Reranker } from '../../src/core/ports.js';
 import { approximateTokenCounter } from '../../src/core/tokens.js';
@@ -163,5 +164,92 @@ describe('chat server', () => {
 
   it('binds to the loopback interface only', () => {
     expect(new URL(server.url).hostname).toBe('127.0.0.1');
+  });
+});
+
+describe('chat server logging', () => {
+  let server: ChatServer;
+  let limited: ChatServer;
+  const sent: TransportEntry[] = [];
+  type Event = Record<string, unknown> & { labels: Record<string, string> };
+  const events = (): Event[] =>
+    sent.map((e) => ({ ...(JSON.parse(e.line) as Record<string, unknown>), labels: e.labels }));
+
+  beforeAll(async () => {
+    const logger = createLogger({
+      labels: { service: 'rag-chat', env: 'test' },
+      transport: { send: (e) => sent.push(e), close: async () => {} },
+      sink: () => {},
+    });
+    const options = { usageFile: path.join(tmp, 'usage.json'), lastAskFile: null, logger };
+    server = await startChatServer({ ...options, createRag: () => toyRag(confident) });
+    limited = await startChatServer({ ...options, createRag: () => toyRag(confident) });
+  });
+  afterAll(async () => {
+    await server.close();
+    await limited.close();
+  });
+
+  it('logs ask.completed with question and answer text for each /api/ask', async () => {
+    const { status } = await post<AnswerView>(server, '/api/ask', {
+      question: 'When does the Lisbon office open?',
+    });
+    expect(status).toBe(200);
+    const ask = events().find((e) => e.event === 'ask.completed')!;
+    expect(ask).toMatchObject({
+      event: 'ask.completed',
+      source: 'chat',
+      question: 'When does the Lisbon office open?',
+      status: 'answered',
+    });
+    expect(String(ask.answer).length).toBeGreaterThan(0);
+    expect(typeof ask.id).toBe('string');
+  });
+
+  it('logs http.request with route, status and duration', async () => {
+    await fetch(new URL('/api/status', server.url));
+    await expect
+      .poll(() => events().find((e) => e.event === 'http.request' && e.route === '/api/status'))
+      .toMatchObject({ method: 'GET', status: 200, labels: { level: 'info' } });
+    const req = events().find((e) => e.event === 'http.request' && e.route === '/api/status')!;
+    expect(typeof req.ms).toBe('number');
+  });
+
+  it('accepts a client log and records it as browser.error under service rag-browser', async () => {
+    const res = await fetch(new URL('/api/client-log', server.url), {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ message: 'TypeError: x is undefined', page: '/' }),
+    });
+    expect(res.status).toBe(204);
+    const err = events().find((e) => e.event === 'browser.error')!;
+    expect(err).toMatchObject({ message: 'TypeError: x is undefined', page: '/' });
+    expect(err.labels).toMatchObject({ service: 'rag-browser', level: 'warn', env: 'test' });
+  });
+
+  it('rejects oversized client logs', async () => {
+    const { status, body } = await post<{ kind: string }>(server, '/api/client-log', {
+      message: 'x'.repeat(2001),
+    });
+    expect(status).toBe(400);
+    expect(body.kind).toBe('input');
+  });
+
+  it('rate-limits client logs with 429', async () => {
+    const statuses: number[] = [];
+    for (let i = 0; i < 31; i++) {
+      const res = await fetch(new URL('/api/client-log', limited.url), {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ message: `error ${i}` }),
+      });
+      statuses.push(res.status);
+    }
+    expect(statuses.slice(0, 30).every((s) => s === 204)).toBe(true);
+    expect(statuses[30]).toBe(429);
+    const ask = await post<AnswerView>(limited, '/api/ask', {
+      question: 'When does the Lisbon office open?',
+    });
+    expect(ask.status).toBe(200);
   });
 });

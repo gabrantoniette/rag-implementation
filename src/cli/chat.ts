@@ -14,7 +14,10 @@ runCli(async () => {
     process.stderr.write('Usage: npm run chat -- [--port 4317]\n');
     return 1;
   }
-  const server = await startChatServer({ createRag: () => createRag(), port });
+  const server = await startChatServer({
+    createRag: () => createRag({ service: 'rag-chat' }),
+    port,
+  });
   process.stdout.write(`Chat page: ${server.url}\nPress Ctrl+C to stop.\n`);
   await new Promise<void>((resolve) => {
     const stop = () => resolve();

@@ -22,6 +22,44 @@ const STOP = new Set(
   ),
 );
 
+// ---------- browser errors go to the server log (and to Loki when it is configured) ----------
+// Registered first so errors during start-up are reported too. At most 10 per page load; a
+// failed report is dropped silently so the collector can never cause errors of its own.
+const MAX_CLIENT_LOGS = 10;
+let clientLogsSent = 0;
+
+function reportClientError(message, extra = {}) {
+  if (clientLogsSent >= MAX_CLIENT_LOGS) return;
+  clientLogsSent += 1;
+  const body = {
+    message: String(message || 'Unknown error').slice(0, 2000),
+    page: location.pathname.slice(0, 200),
+    ...extra,
+  };
+  fetch('/api/client-log', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+    keepalive: true,
+  }).catch(() => {});
+}
+
+window.addEventListener('error', (event) => {
+  reportClientError(event.message, {
+    source: String(event.filename || '').slice(0, 500) || undefined,
+    line: event.lineno || undefined,
+    column: event.colno || undefined,
+    stack: event.error?.stack ? String(event.error.stack).slice(0, 8000) : undefined,
+  });
+});
+window.addEventListener('unhandledrejection', (event) => {
+  const reason = event.reason;
+  reportClientError(
+    reason instanceof Error ? `${reason.name}: ${reason.message}` : String(reason),
+    { stack: reason?.stack ? String(reason.stack).slice(0, 8000) : undefined },
+  );
+});
+
 const els = {
   slug: document.getElementById('slug'),
   takes: document.getElementById('takes'),
