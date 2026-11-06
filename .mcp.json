@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "grafana": {
+      "command": "node",
+      "args": ["scripts/mcp-grafana.mjs"]
+    },
+    "playwright": {
+      "command": "node",
+      "args": ["scripts/mcp-playwright.mjs"]
+    }
+  }
+}
