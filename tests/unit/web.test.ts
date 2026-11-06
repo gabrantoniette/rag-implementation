@@ -396,3 +396,17 @@ describe('server errors reach the error panel (review fix)', () => {
     }
   });
 });
+
+describe('chat server bind address (review fix)', () => {
+  it('reports the address it actually listens on', async () => {
+    const s = await startChatServer({
+      createRag: () => Promise.reject(new Error('not needed')),
+      lastAskFile: null,
+    });
+    try {
+      expect(s.address()).toEqual({ host: '127.0.0.1', port: Number(new URL(s.url).port) });
+    } finally {
+      await s.close();
+    }
+  });
+});

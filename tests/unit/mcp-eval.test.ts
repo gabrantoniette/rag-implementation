@@ -4,7 +4,12 @@ import { projectPath } from '../../src/core/paths.js';
 import { measure, summarize } from '../../src/mcp-eval/metrics.js';
 import { findRef, isWriteTool, leakedSecrets, lokiLines } from '../../src/mcp-eval/parse.js';
 import { uncovered } from '../../src/mcp-eval/preflight.js';
-import { headerFindings, loopbackFindings, parseComposePs } from '../../src/mcp-eval/security.js';
+import {
+  headerFindings,
+  loopbackFindings,
+  parseComposePs,
+  portCoverage,
+} from '../../src/mcp-eval/security.js';
 import { startChatServer } from '../../src/web/server.js';
 
 const fixture = (name: string) =>
@@ -128,5 +133,32 @@ describe('leakedSecrets (review fix)', () => {
     expect(leakedSecrets('{"q":"clean"}', [secret])).toBe(0);
     expect(leakedSecrets('{"k":"sk-or-v1-abc"}', [])).toBe(1);
     expect(leakedSecrets('{"k":"glsa_abc"}', [''])).toBe(1);
+  });
+});
+
+describe('portCoverage (review fix)', () => {
+  const expected = ['neo4j', 'loki', 'grafana'];
+
+  it('leaves the port check uncovered when docker compose ps fails', () => {
+    const r = portCoverage(null, expected);
+    expect(r.uncovered).toEqual(['docker compose ps failed, so no published port was checked']);
+    expect(r.findings).toEqual([]);
+  });
+
+  it('marks each expected service that is not running as uncovered', () => {
+    const onlyNeo4j = fixture('compose-ps.jsonl')
+      .split('\n')
+      .filter((l) => l.includes('"Service":"neo4j"'))
+      .join('\n');
+    expect(portCoverage(onlyNeo4j, expected).uncovered).toEqual([
+      'loki is not running, so its ports were not checked',
+      'grafana is not running, so its ports were not checked',
+    ]);
+  });
+
+  it('is fully covered with no findings when every service runs on loopback', () => {
+    const r = portCoverage(fixture('compose-ps.jsonl'), expected);
+    expect(r).toMatchObject({ uncovered: [], findings: [] });
+    expect(r.ports).toHaveLength(4);
   });
 });

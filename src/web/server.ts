@@ -248,6 +248,8 @@ export interface ChatServerOptions {
 
 export interface ChatServer {
   url: string;
+  /** The address the socket is bound to, read from the socket itself (not from the URL). */
+  address(): { host: string; port: number };
   close(): Promise<void>;
 }
 
@@ -503,6 +505,10 @@ export async function startChatServer(options: ChatServerOptions): Promise<ChatS
   const { port } = server.address() as AddressInfo;
   return {
     url: `http://127.0.0.1:${port}/`,
+    address() {
+      const bound = server.address() as AddressInfo;
+      return { host: bound.address, port: bound.port };
+    },
     async close() {
       await new Promise<void>((resolve) => server.close(() => resolve()));
       if (ragPromise) await (await ragPromise.catch(() => null))?.close();

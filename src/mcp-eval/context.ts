@@ -5,6 +5,8 @@ import type { ScenarioResult, Thresholds } from './types.js';
 export interface EvalContext {
   /** Base URL of the chat server the harness started, ending in '/'. */
   chatUrl: string;
+  /** The address the chat server's socket is bound to (ChatServer.address().host). */
+  chatBindHost: string;
   /** Unique string carried by the question, so its log line can be found in Loki. */
   marker: string;
   question: string;

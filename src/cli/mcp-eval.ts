@@ -103,6 +103,7 @@ runCli(async () => {
     const marker = `mcp-eval-${randomUUID()}`;
     const ctx: EvalContext = {
       chatUrl: server.url,
+      chatBindHost: server.address().host,
       marker,
       question: `When did Lewis Hamilton join Mercedes? (${marker})`,
       thresholds,
