@@ -1,0 +1,174 @@
+{
+  "date": "2026-11-06",
+  "live": false,
+  "commit": "ba52f6e",
+  "thresholds": {
+    "grafana": {
+      "visibleMs": 5000,
+      "callP95Ms": 1000,
+      "startMs": 10000
+    },
+    "playwright": {
+      "totalMs": 20000,
+      "toolCalls": 12,
+      "startMs": 10000,
+      "consoleErrors": 0,
+      "apiFailures": 0
+    },
+    "calibration": {
+      "date": "2026-11-06",
+      "rule": "new limit = max(2 x the first measured value, a floor set by how the stack works); counts that the scenario fixes stay as they were",
+      "notes": [
+        "grafana.visibleMs 10000 -> 5000 (measured 1090 ms; floor 5000: the transport flushes every 1 s, Loki ingests, and the scenario polls every 500 ms)",
+        "grafana.callP95Ms 3000 -> 1000 (measured 156 ms; floor 1000)",
+        "grafana.startMs 30000 -> 10000 (measured 972 ms; floor 10000 for a cold docker run of the MCP container)",
+        "playwright.startMs 30000 -> 10000 (measured 1482 ms; floor 10000 for a cold Chrome start)",
+        "playwright.totalMs 60000 -> 20000 (measured 5512 ms with the mock LLM; floor 20000)",
+        "playwright.toolCalls 12 unchanged (the scenario always makes 8 calls)",
+        "consoleErrors and apiFailures stay 0: any console error or failing /api/ request is a real failure"
+      ]
+    }
+  },
+  "notes": [
+    "Limits recalibrated on 2026-11-06: new limit = max(2 x the first measured value, a floor set by how the stack works); counts that the scenario fixes stay as they were.",
+    "grafana.visibleMs 10000 -> 5000 (measured 1090 ms; floor 5000: the transport flushes every 1 s, Loki ingests, and the scenario polls every 500 ms)",
+    "grafana.callP95Ms 3000 -> 1000 (measured 156 ms; floor 1000)",
+    "grafana.startMs 30000 -> 10000 (measured 972 ms; floor 10000 for a cold docker run of the MCP container)",
+    "playwright.startMs 30000 -> 10000 (measured 1482 ms; floor 10000 for a cold Chrome start)",
+    "playwright.totalMs 60000 -> 20000 (measured 5512 ms with the mock LLM; floor 20000)",
+    "playwright.toolCalls 12 unchanged (the scenario always makes 8 calls)",
+    "consoleErrors and apiFailures stay 0: any console error or failing /api/ request is a real failure"
+  ],
+  "results": [
+    {
+      "name": "grafana",
+      "covered": true,
+      "pass": true,
+      "measures": [
+        {
+          "name": "startMs",
+          "value": 1643,
+          "unit": "ms",
+          "limit": 10000,
+          "pass": true
+        },
+        {
+          "name": "tools",
+          "value": 17,
+          "unit": "count"
+        },
+        {
+          "name": "toolSchemaBytes",
+          "value": 12556,
+          "unit": "bytes"
+        },
+        {
+          "name": "visibleMs",
+          "value": 1402,
+          "unit": "ms",
+          "limit": 5000,
+          "pass": true
+        },
+        {
+          "name": "callP50Ms",
+          "value": 409,
+          "unit": "ms"
+        },
+        {
+          "name": "callP95Ms",
+          "value": 640,
+          "unit": "ms",
+          "limit": 1000,
+          "pass": true
+        },
+        {
+          "name": "toolCalls",
+          "value": 12,
+          "unit": "count"
+        }
+      ],
+      "findings": [],
+      "notes": ["Found status=answered mode=full with 431 characters of answer text."]
+    },
+    {
+      "name": "playwright",
+      "covered": true,
+      "pass": true,
+      "measures": [
+        {
+          "name": "startMs",
+          "value": 2129,
+          "unit": "ms",
+          "limit": 10000,
+          "pass": true
+        },
+        {
+          "name": "tools",
+          "value": 25,
+          "unit": "count"
+        },
+        {
+          "name": "toolSchemaBytes",
+          "value": 16074,
+          "unit": "bytes"
+        },
+        {
+          "name": "totalMs",
+          "value": 10974,
+          "unit": "ms",
+          "limit": 20000,
+          "pass": true
+        },
+        {
+          "name": "toolCalls",
+          "value": 8,
+          "unit": "count",
+          "limit": 12,
+          "pass": true
+        },
+        {
+          "name": "consoleErrors",
+          "value": 0,
+          "unit": "count",
+          "limit": 0,
+          "pass": true
+        },
+        {
+          "name": "apiFailures",
+          "value": 0,
+          "unit": "count",
+          "limit": 0,
+          "pass": true
+        },
+        {
+          "name": "apiRequests",
+          "value": 3,
+          "unit": "count"
+        }
+      ],
+      "findings": [],
+      "notes": ["Network: /api/status 200, /api/ask 200, /api/status 200"]
+    },
+    {
+      "name": "security",
+      "covered": true,
+      "pass": true,
+      "measures": [
+        {
+          "name": "publishedPorts",
+          "value": 4,
+          "unit": "count"
+        },
+        {
+          "name": "findings",
+          "value": 0,
+          "unit": "count",
+          "limit": 0,
+          "pass": true
+        }
+      ],
+      "findings": [],
+      "notes": []
+    }
+  ]
+}
