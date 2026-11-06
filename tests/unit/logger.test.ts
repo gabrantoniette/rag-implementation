@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { REDACTED, type TransportEntry, createLogger, redact } from '../../src/core/logger.js';
+import {
+  MAX_FIELD_CHARS,
+  REDACTED,
+  type TransportEntry,
+  createLogger,
+  redact,
+} from '../../src/core/logger.js';
 
 describe('logger redaction', () => {
   it('scrubs the exact secret values it was given', () => {
@@ -96,5 +102,47 @@ describe('logger transport (Loki)', () => {
     const { sent, transport } = capture();
     createLogger({ level: 'warn', transport, sink: () => {} }).info('hidden');
     expect(sent).toHaveLength(0);
+  });
+});
+
+describe('logger transport redaction (review fixes)', () => {
+  const capture = () => {
+    const sent: TransportEntry[] = [];
+    return {
+      sent,
+      transport: { send: (e: TransportEntry) => sent.push(e), close: async () => {} },
+    };
+  };
+
+  it('redacts a secret containing quotes and backslashes in shipped fields', () => {
+    const secret = 'pa"ss\word123';
+    const { sent, transport } = capture();
+    createLogger({ secrets: [secret], transport, sink: () => {} }).info('ask', {
+      question: `my ${secret}`,
+    });
+    expect(sent[0]!.line).not.toContain(JSON.stringify(secret).slice(1, -1));
+    expect(JSON.parse(sent[0]!.line).question).toBe(`my ${REDACTED}`);
+  });
+
+  it('redacts a key that straddles the truncation boundary', () => {
+    const key = `sk-or-v1-${'a1b2c3d4'.repeat(4)}`;
+    const { sent, transport } = capture();
+    createLogger({ transport, sink: () => {} }).info('ask', {
+      // Padding after the key keeps the field over the limit even once the key is redacted.
+      question: `${'x'.repeat(MAX_FIELD_CHARS - 12)}${key} ${'y'.repeat(50)}`,
+    });
+    expect(sent[0]!.line).not.toContain('sk-or-v1-a1b');
+    expect(JSON.parse(sent[0]!.line).truncated).toBe(true);
+  });
+
+  it('redacts nested values and survives circular data', () => {
+    const { sent, transport } = capture();
+    const data: Record<string, unknown> = {
+      nested: { list: ['token glsa_ABCDEFGHIJKLMNOPQRSTUVWX_1234'] },
+    };
+    data.self = data;
+    createLogger({ transport, sink: () => {} }).info('nested', data);
+    expect(sent[0]!.line).not.toContain('glsa_ABCDEFGHIJKLMNOPQRSTUVWX_1234');
+    expect(JSON.parse(sent[0]!.line).nested.list[0]).toBe(`token ${REDACTED}`);
   });
 });

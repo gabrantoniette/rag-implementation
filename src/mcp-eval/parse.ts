@@ -18,6 +18,18 @@ export function isWriteTool(name: string): boolean {
   return WRITE_PREFIXES.some((p) => name.startsWith(p));
 }
 
+const KEY_PREFIXES = ['sk-or-', 'glsa_'];
+
+/**
+ * How many secrets appear in a shipped log line: each exact value is looked for both as is and in
+ * its JSON-escaped form (a password with " or \ is escaped inside the line), plus key prefixes.
+ */
+export function leakedSecrets(line: string, secrets: readonly string[]): number {
+  return [...KEY_PREFIXES, ...secrets].filter(
+    (s) => s.length > 0 && (line.includes(s) || line.includes(JSON.stringify(s).slice(1, -1))),
+  ).length;
+}
+
 /** All text blocks of a tool result, joined. */
 export function resultText(result: CallToolResult): string {
   return result.content

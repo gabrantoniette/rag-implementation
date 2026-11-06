@@ -84,11 +84,28 @@ function asRecord(data: unknown): Record<string, unknown> {
   return { data };
 }
 
-function transportLine(message: string, data: unknown): string {
+/**
+ * Redacts every string value of a structure (keys are left alone). It runs before JSON encoding,
+ * so a secret containing " or \ is still matched, and before truncation, so a key cut at the
+ * size limit has already been replaced. Circular references become '[Circular]'.
+ */
+function redactDeep(value: unknown, secrets: readonly string[], seen = new WeakSet()): unknown {
+  if (typeof value === 'string') return redact(value, secrets);
+  if (typeof value !== 'object' || value === null) return value;
+  if (seen.has(value)) return '[Circular]';
+  seen.add(value);
+  if (Array.isArray(value)) return value.map((v) => redactDeep(v, secrets, seen));
+  return Object.fromEntries(
+    Object.entries(value).map(([k, v]) => [k, redactDeep(v, secrets, seen)]),
+  );
+}
+
+function transportLine(message: string, data: unknown, secrets: readonly string[]): string {
   try {
-    return JSON.stringify(truncateFields({ msg: message, ...asRecord(data) }));
+    const record = redactDeep({ msg: message, ...asRecord(data) }, secrets);
+    return JSON.stringify(truncateFields(record as Record<string, unknown>));
   } catch {
-    return JSON.stringify({ msg: message, data: String(data) });
+    return JSON.stringify({ msg: redact(message, secrets), data: redact(String(data), secrets) });
   }
 }
 
@@ -114,7 +131,7 @@ export function createLogger(options: LoggerOptions = {}): Logger {
       transport?.send({
         timeMs: Date.now(),
         labels: { ...labels, level },
-        line: redact(transportLine(message, data), secrets),
+        line: transportLine(message, data, secrets),
       });
     };
     return {

@@ -3,7 +3,7 @@ import path from 'node:path';
 import { type McpSession, openMcp } from './client.js';
 import { type EvalContext, decide, emptyResult, sleep } from './context.js';
 import { measure, summarize } from './metrics.js';
-import { isWriteTool, lokiLines } from './parse.js';
+import { isWriteTool, leakedSecrets, lokiLines } from './parse.js';
 import type { ScenarioResult } from './types.js';
 
 const REPEATS = 10;
@@ -65,9 +65,8 @@ export async function runGrafanaScenario(ctx: EvalContext): Promise<ScenarioResu
       result.findings.push('the logged question does not carry the marker');
     if (String(event.answer ?? '').length === 0)
       result.findings.push('the logged answer text is empty');
-    const leaked = ['sk-or-', 'glsa_', ...ctx.secrets].filter((s) => s && line.includes(s));
-    if (leaked.length)
-      result.findings.push(`${leaked.length} secret value(s) found in the log line`);
+    const leaked = leakedSecrets(line, ctx.secrets);
+    if (leaked) result.findings.push(`${leaked} secret value(s) found in the log line`);
     result.notes.push(
       `Found status=${event.status} mode=${event.mode} with ${String(event.answer).length} characters of answer text.`,
     );

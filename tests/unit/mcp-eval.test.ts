@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { projectPath } from '../../src/core/paths.js';
 import { measure, summarize } from '../../src/mcp-eval/metrics.js';
-import { findRef, isWriteTool, lokiLines } from '../../src/mcp-eval/parse.js';
+import { findRef, isWriteTool, leakedSecrets, lokiLines } from '../../src/mcp-eval/parse.js';
 import { uncovered } from '../../src/mcp-eval/preflight.js';
 import { headerFindings, loopbackFindings, parseComposePs } from '../../src/mcp-eval/security.js';
 import { startChatServer } from '../../src/web/server.js';
@@ -117,5 +117,16 @@ describe('lokiLines (real query_loki_logs response)', () => {
     expect(lines).toHaveLength(1);
     expect(lines[0]).toContain('"event":"ask.completed"');
     expect(JSON.parse(lines[0]!).question).toMatch(/\(mcp-eval-[0-9a-f-]{36}\)$/);
+  });
+});
+
+describe('leakedSecrets (review fix)', () => {
+  it('finds a secret in a log line even when JSON escaped it', () => {
+    const secret = String.raw`pa"ss\word123`;
+    const shipped = JSON.stringify({ q: `my ${secret}` }); // {"q":"my pa\"ss\\word123"}
+    expect(leakedSecrets(shipped, [secret])).toBe(1);
+    expect(leakedSecrets('{"q":"clean"}', [secret])).toBe(0);
+    expect(leakedSecrets('{"k":"sk-or-v1-abc"}', [])).toBe(1);
+    expect(leakedSecrets('{"k":"glsa_abc"}', [''])).toBe(1);
   });
 });
