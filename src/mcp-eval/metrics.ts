@@ -19,3 +19,9 @@ export function measure(
     ? { name, value, unit }
     : { name, value, unit, limit, pass: value <= limit };
 }
+
+/** Time per tool call (spec 5.5): p50 and p95 over every call of a session. */
+export function callMeasures(calls: { ms: number }[], p95Limit?: number): Measure[] {
+  const s = summarize(calls.map((c) => c.ms));
+  return [measure('callP50Ms', s.p50, 'ms'), measure('callP95Ms', s.p95, 'ms', p95Limit)];
+}

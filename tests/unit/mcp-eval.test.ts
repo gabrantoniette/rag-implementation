@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { projectPath } from '../../src/core/paths.js';
-import { measure, summarize } from '../../src/mcp-eval/metrics.js';
+import { callMeasures, measure, summarize } from '../../src/mcp-eval/metrics.js';
 import { findRef, isWriteTool, leakedSecrets, lokiLines } from '../../src/mcp-eval/parse.js';
 import { uncovered } from '../../src/mcp-eval/preflight.js';
 import {
@@ -160,5 +160,14 @@ describe('portCoverage (review fix)', () => {
     const r = portCoverage(fixture('compose-ps.jsonl'), expected);
     expect(r).toMatchObject({ uncovered: [], findings: [] });
     expect(r.ports).toHaveLength(4);
+  });
+});
+
+describe('callMeasures (review fix: time per call)', () => {
+  it('reports p50 and p95 per tool call, with the p95 limit when given', () => {
+    expect(callMeasures([{ ms: 10 }, { ms: 30 }, { ms: 20 }], 25)).toEqual([
+      { name: 'callP50Ms', value: 20, unit: 'ms' },
+      { name: 'callP95Ms', value: 30, unit: 'ms', limit: 25, pass: false },
+    ]);
   });
 });

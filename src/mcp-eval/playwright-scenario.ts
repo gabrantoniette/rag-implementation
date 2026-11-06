@@ -1,6 +1,6 @@
 import { type McpSession, openMcp } from './client.js';
 import { type EvalContext, decide, emptyResult } from './context.js';
-import { measure } from './metrics.js';
+import { callMeasures, measure } from './metrics.js';
 import { findRef, resultText } from './parse.js';
 import type { ScenarioResult } from './types.js';
 
@@ -69,6 +69,7 @@ export async function runPlaywrightScenario(ctx: EvalContext): Promise<ScenarioR
     result.measures.push(
       measure('totalMs', Math.round(performance.now() - started), 'ms', t.totalMs),
       measure('toolCalls', session.calls.length, 'count', t.toolCalls),
+      ...callMeasures(session.calls),
       measure('consoleErrors', errors.length, 'count', t.consoleErrors),
       measure('apiFailures', failures.length, 'count', t.apiFailures),
       measure('apiRequests', requests.length, 'count'),
