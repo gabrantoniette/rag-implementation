@@ -354,3 +354,45 @@ describe('chat server request gate (review fix)', () => {
     expect(res.status).toBe(204);
   });
 });
+
+describe('server errors reach the error panel (review fix)', () => {
+  it('logs an HTTP 5xx at error level, plus ask.failed', async () => {
+    const sent: TransportEntry[] = [];
+    const logger = createLogger({
+      labels: { service: 'rag-chat' },
+      transport: { send: (e) => sent.push(e), close: async () => {} },
+      sink: () => {},
+    });
+    const broken = await startChatServer({
+      createRag: async () => {
+        const rag = await toyRag(confident);
+        rag.ask = async () => {
+          throw new Error('boom');
+        };
+        return rag;
+      },
+      lastAskFile: null,
+      logger,
+    });
+    try {
+      const { status } = await post<{ kind: string }>(broken, '/api/ask', { question: 'Q?' });
+      expect(status).toBe(500);
+      const entries = sent.map((e) => ({ level: e.labels.level, ...JSON.parse(e.line) }));
+      await expect
+        .poll(
+          () =>
+            entries.length &&
+            sent
+              .map((e) => ({ level: e.labels.level, ...JSON.parse(e.line) }))
+              .find((e) => e.event === 'http.request' && e.status === 500),
+        )
+        .toMatchObject({ level: 'error', route: '/api/ask' });
+      expect(entries.find((e) => e.event === 'ask.failed')).toMatchObject({
+        level: 'error',
+        question: 'Q?',
+      });
+    } finally {
+      await broken.close();
+    }
+  });
+});

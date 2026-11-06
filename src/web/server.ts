@@ -422,7 +422,8 @@ export async function startChatServer(options: ChatServerOptions): Promise<ChatS
       return send(res, gate.status, gate.body);
     }
     res.on('finish', () => {
-      const level = res.statusCode >= 500 ? 'warn' : 'info';
+      // A server error counts in the dashboard's "Errors per minute" panel (level="error").
+      const level = res.statusCode >= 500 ? 'error' : 'info';
       log()?.[level]('http request', {
         event: 'http.request',
         method: req.method,
