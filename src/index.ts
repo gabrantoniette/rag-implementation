@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { PassThroughReranker, RuleIntentClassifier } from './adapters/baselines.js';
 import { TransformersEmbedder } from './adapters/embedder.js';
 import { NerExtractor, WikiLinkExtractor } from './adapters/entities.js';
-import { LokiTransport } from './adapters/loki.js';
 import { InMemoryStore } from './adapters/memory-store.js';
 import { MockLlmClient } from './adapters/mock-llm.js';
 import { Neo4jStore } from './adapters/neo4j-store.js';
@@ -13,10 +12,10 @@ import { QuotaGuard } from './adapters/quota.js';
 import { TfjsIntentClassifier, TfjsReranker, currentVersion } from './adapters/tfjs.js';
 import { createModelTokenCounter } from './adapters/tokenizer.js';
 import { WhisperRecognizer } from './adapters/whisper.js';
-import { type AppConfig, loadConfig, secretValues } from './core/config.js';
+import { type AppConfig, loadConfig } from './core/config.js';
 import { ConfigError } from './core/errors.js';
 import { normalizeUri } from './core/hash.js';
-import { type Logger, createLogger } from './core/logger.js';
+import type { Logger } from './core/logger.js';
 import { PATHS } from './core/paths.js';
 import type {
   Embedder,
@@ -30,6 +29,7 @@ import { type Rag, buildRag } from './core/rag.js';
 import type { VectorGraphStore } from './core/store.js';
 import type { TokenCounter } from './core/tokens.js';
 import { createRegistry } from './loaders/index.js';
+import { createAppLogger } from './logging.js';
 import type { LoaderContext } from './loaders/types.js';
 import { fetchArticle, saveArticle, wikimediaUserAgent } from './loaders/wikipedia-fetch.js';
 import { LazyCaptioner } from './vision/captioner.js';
@@ -109,18 +109,7 @@ export async function createRag(input: CreateRagConfig = {}): Promise<RagInstanc
     ...(options.domainDir ? { domainDir: options.domainDir } : {}),
   });
   const { env, parameters, domain } = config;
-  const logger =
-    options.logger ??
-    createLogger({
-      level: env.LOG_LEVEL,
-      secrets: secretValues(env),
-      ...(env.LOKI_URL
-        ? {
-            transport: new LokiTransport({ url: env.LOKI_URL }),
-            labels: { service: options.service, domain: domain.name, env: env.LOG_ENV },
-          }
-        : {}),
-    });
+  const logger = options.logger ?? createAppLogger(config, options.service);
 
   let store: VectorGraphStore;
   if (options.store === 'memory') store = new InMemoryStore();

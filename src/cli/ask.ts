@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { MODES, type Mode } from '../core/chain.js';
+import { askEventFields } from '../core/events.js';
 import { PATHS } from '../core/paths.js';
 import { createRag } from '../index.js';
 import { flagString, parseArgs, runCli } from './args.js';
@@ -35,6 +36,7 @@ runCli(async () => {
       process.stdout.write(`\n${'='.repeat(72)}\n${result.answer}\n${'='.repeat(72)}\n`);
       process.stdout.write(`model=${result.state.model ?? '-'} refused=${result.refused}\n`);
     }
+    rag.logger.info('ask completed', askEventFields(result, { source: 'cli' }));
     mkdirSync(path.dirname(PATHS.lastAsk), { recursive: true });
     writeFileSync(PATHS.lastAsk, JSON.stringify(serializableState(result.state), null, 2));
     return 0;
