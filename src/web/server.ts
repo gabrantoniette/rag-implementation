@@ -237,13 +237,20 @@ export async function startChatServer(options: ChatServerOptions): Promise<ChatS
       })
       .catch((error: unknown) => {
         ragPromise = null;
+        // Only an injected logger can report this: the library's own never came to exist.
+        log()?.error('library failed to load', {
+          event: 'rag.load_failed',
+          error: describeError(error).body.error,
+        });
         throw error;
       });
     return ragPromise;
   };
 
   /** The injected logger, else the library's (null until the library has loaded). */
-  const log = (): Logger | null => options.logger ?? ragLogger;
+  function log(): Logger | null {
+    return options.logger ?? ragLogger;
+  }
 
   /** The embedder and TF.js models are single-threaded: run library calls one at a time. */
   const serial = <T>(task: () => Promise<T>): Promise<T> => {

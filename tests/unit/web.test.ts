@@ -253,3 +253,37 @@ describe('chat server logging', () => {
     expect(ask.status).toBe(200);
   });
 });
+
+describe('chat server logging when the library fails to load (review fix)', () => {
+  it('logs rag.load_failed and still accepts client logs through the injected logger', async () => {
+    const sent: TransportEntry[] = [];
+    const logger = createLogger({
+      labels: { service: 'rag-chat' },
+      transport: { send: (e) => sent.push(e), close: async () => {} },
+      sink: () => {},
+    });
+    const failing = await startChatServer({
+      createRag: () => Promise.reject(new Error('NEO4J_PASSWORD is empty')),
+      lastAskFile: null,
+      logger,
+    });
+    try {
+      const status = (await (await fetch(new URL('/api/status', failing.url))).json()) as {
+        ready: boolean;
+      };
+      expect(status.ready).toBe(false);
+      const events = sent.map((e) => JSON.parse(e.line) as Record<string, unknown>);
+      expect(events).toContainEqual(
+        expect.objectContaining({ event: 'rag.load_failed', error: 'NEO4J_PASSWORD is empty' }),
+      );
+      const res = await fetch(new URL('/api/client-log', failing.url), {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ message: 'TypeError: page broke' }),
+      });
+      expect(res.status).toBe(204);
+    } finally {
+      await failing.close();
+    }
+  });
+});
