@@ -25,7 +25,6 @@
     "eval:retrieval": "node scripts/tsx.mjs src/cli/eval-retrieval.ts",
     "evidence": "node scripts/tsx.mjs src/cli/evidence.ts",
     "mcp:eval": "node scripts/tsx.mjs src/cli/mcp-eval.ts",
-    "record:build": "node scripts/tsx.mjs src/cli/record-build.ts",
     "scan:secrets": "node scripts/tsx.mjs src/cli/scan-secrets.ts",
     "lint": "eslint . && prettier --check .",
     "typecheck": "tsc --noEmit",
