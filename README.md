@@ -3,6 +3,11 @@
 [![CI](https://github.com/gabrantoniette/rag-implementation/actions/workflows/ci.yml/badge.svg)](https://github.com/gabrantoniette/rag-implementation/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/gabrantoniette/gabrantoniette/main/assets/generated/languages/rag-implementation-dark.svg">
+  <img src="https://raw.githubusercontent.com/gabrantoniette/gabrantoniette/main/assets/generated/languages/rag-implementation-light.svg" alt="Languages in rag-implementation, by share of code">
+</picture>
+
 A zero-cost, reusable **GraphRAG** example in TypeScript. It ingests documents into Neo4j (vector
 index, fulltext index and an entity graph), answers questions with a single call to a **free**
 OpenRouter model, and then **checks the answer locally**: every citation must exist in the retrieved
