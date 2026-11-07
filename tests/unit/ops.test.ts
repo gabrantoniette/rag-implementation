@@ -1,0 +1,61 @@
+import { readFileSync } from 'node:fs';
+import { describe, expect, it } from 'vitest';
+import { projectPath } from '../../src/core/paths.js';
+
+describe('docker-compose: local services stay on loopback', () => {
+  it('publishes every compose port on 127.0.0.1 only', () => {
+    const compose = readFileSync(projectPath('docker-compose.yml'), 'utf8');
+    const ports = [...compose.matchAll(/^\s*-\s*'([^']+)'\s*$/gm)]
+      .map((m) => m[1]!)
+      .filter((p) => /:\d+$/.test(p));
+    expect(ports.length).toBeGreaterThanOrEqual(4); // 7474, 7687, 3100, 3000
+    for (const p of ports) expect(p.startsWith('127.0.0.1:')).toBe(true);
+  });
+
+  it('keeps loki and grafana behind the observability profile with memory limits', () => {
+    const compose = readFileSync(projectPath('docker-compose.yml'), 'utf8');
+    for (const name of ['loki', 'grafana']) {
+      const block = compose.split(new RegExp(`^  ${name}:`, 'm'))[1]!.split(/^ {2}\w/m)[0]!;
+      expect(block).toMatch(/profiles:\s*\[\s*'?observability'?\s*\]/);
+      expect(block).toMatch(/mem_limit:/);
+    }
+  });
+
+  it('provisions a dashboard whose every query targets Loki and hides eval traffic', () => {
+    const dash = JSON.parse(
+      readFileSync(projectPath('ops/grafana/dashboards/rag-observability.json'), 'utf8'),
+    );
+    expect(dash.uid).toBe('rag-observability');
+    expect(dash.refresh).toBe('10s');
+    const targets = dash.panels.flatMap((p: { targets?: unknown[] }) => p.targets ?? []);
+    expect(targets.length).toBeGreaterThanOrEqual(6);
+    for (const t of targets as { datasource: { uid: string }; expr: string }[]) {
+      expect(t.datasource.uid).toBe('loki');
+      expect(t.expr).toContain('env!="eval"');
+    }
+  });
+
+  it('sets 168h retention in the Loki config', () => {
+    const loki = readFileSync(projectPath('ops', 'loki', 'loki.yaml'), 'utf8');
+    expect(loki).toMatch(/retention_period:\s*168h/);
+    expect(loki).toMatch(/retention_enabled:\s*true/);
+    expect(loki).toMatch(/auth_enabled:\s*false/);
+  });
+});
+
+describe('dashboard filters (review fix)', () => {
+  it('lets the log panel be filtered by service and level', () => {
+    const dash = JSON.parse(
+      readFileSync(projectPath('ops/grafana/dashboards/rag-observability.json'), 'utf8'),
+    ) as {
+      templating: { list: { name: string; includeAll: boolean }[] };
+      panels: { title: string; targets: { expr: string }[] }[];
+    };
+    const vars = dash.templating.list.map((v) => v.name);
+    expect(vars).toEqual(expect.arrayContaining(['service', 'level']));
+    expect(dash.templating.list.every((v) => v.includeAll)).toBe(true);
+    const logs = dash.panels.find((p) => p.title === 'Logs')!.targets[0]!.expr;
+    expect(logs).toContain('service=~"$service"');
+    expect(logs).toContain('level=~"$level"');
+  });
+});

@@ -1,6 +1,8 @@
 import { mkdirSync } from 'node:fs';
+import { request as httpRequest } from 'node:http';
 import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { type TransportEntry, createLogger } from '../../src/core/logger.js';
 import { projectPath } from '../../src/core/paths.js';
 import type { Reranker } from '../../src/core/ports.js';
 import { approximateTokenCounter } from '../../src/core/tokens.js';
@@ -163,5 +165,248 @@ describe('chat server', () => {
 
   it('binds to the loopback interface only', () => {
     expect(new URL(server.url).hostname).toBe('127.0.0.1');
+  });
+});
+
+describe('chat server logging', () => {
+  let server: ChatServer;
+  let limited: ChatServer;
+  const sent: TransportEntry[] = [];
+  type Event = Record<string, unknown> & { labels: Record<string, string> };
+  const events = (): Event[] =>
+    sent.map((e) => ({ ...(JSON.parse(e.line) as Record<string, unknown>), labels: e.labels }));
+
+  beforeAll(async () => {
+    const logger = createLogger({
+      labels: { service: 'rag-chat', env: 'test' },
+      transport: { send: (e) => sent.push(e), close: async () => {} },
+      sink: () => {},
+    });
+    const options = { usageFile: path.join(tmp, 'usage.json'), lastAskFile: null, logger };
+    server = await startChatServer({ ...options, createRag: () => toyRag(confident) });
+    limited = await startChatServer({ ...options, createRag: () => toyRag(confident) });
+  });
+  afterAll(async () => {
+    await server.close();
+    await limited.close();
+  });
+
+  it('logs ask.completed with question and answer text for each /api/ask', async () => {
+    const { status } = await post<AnswerView>(server, '/api/ask', {
+      question: 'When does the Lisbon office open?',
+    });
+    expect(status).toBe(200);
+    const ask = events().find((e) => e.event === 'ask.completed')!;
+    expect(ask).toMatchObject({
+      event: 'ask.completed',
+      source: 'chat',
+      question: 'When does the Lisbon office open?',
+      status: 'answered',
+    });
+    expect(String(ask.answer).length).toBeGreaterThan(0);
+    expect(typeof ask.id).toBe('string');
+  });
+
+  it('logs http.request with route, status and duration', async () => {
+    await fetch(new URL('/api/status', server.url));
+    await expect
+      .poll(() => events().find((e) => e.event === 'http.request' && e.route === '/api/status'))
+      .toMatchObject({ method: 'GET', status: 200, labels: { level: 'info' } });
+    const req = events().find((e) => e.event === 'http.request' && e.route === '/api/status')!;
+    expect(typeof req.ms).toBe('number');
+  });
+
+  it('accepts a client log and records it as browser.error under service rag-browser', async () => {
+    const res = await fetch(new URL('/api/client-log', server.url), {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ message: 'TypeError: x is undefined', page: '/' }),
+    });
+    expect(res.status).toBe(204);
+    const err = events().find((e) => e.event === 'browser.error')!;
+    expect(err).toMatchObject({ message: 'TypeError: x is undefined', page: '/' });
+    expect(err.labels).toMatchObject({ service: 'rag-browser', level: 'warn', env: 'test' });
+  });
+
+  it('rejects oversized client logs', async () => {
+    const { status, body } = await post<{ kind: string }>(server, '/api/client-log', {
+      message: 'x'.repeat(2001),
+    });
+    expect(status).toBe(400);
+    expect(body.kind).toBe('input');
+  });
+
+  it('rate-limits client logs with 429', async () => {
+    const statuses: number[] = [];
+    for (let i = 0; i < 31; i++) {
+      const res = await fetch(new URL('/api/client-log', limited.url), {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ message: `error ${i}` }),
+      });
+      statuses.push(res.status);
+    }
+    expect(statuses.slice(0, 30).every((s) => s === 204)).toBe(true);
+    expect(statuses[30]).toBe(429);
+    const ask = await post<AnswerView>(limited, '/api/ask', {
+      question: 'When does the Lisbon office open?',
+    });
+    expect(ask.status).toBe(200);
+  });
+});
+
+describe('chat server logging when the library fails to load (review fix)', () => {
+  it('logs rag.load_failed and still accepts client logs through the injected logger', async () => {
+    const sent: TransportEntry[] = [];
+    const logger = createLogger({
+      labels: { service: 'rag-chat' },
+      transport: { send: (e) => sent.push(e), close: async () => {} },
+      sink: () => {},
+    });
+    const failing = await startChatServer({
+      createRag: () => Promise.reject(new Error('NEO4J_PASSWORD is empty')),
+      lastAskFile: null,
+      logger,
+    });
+    try {
+      const status = (await (await fetch(new URL('/api/status', failing.url))).json()) as {
+        ready: boolean;
+      };
+      expect(status.ready).toBe(false);
+      const events = sent.map((e) => JSON.parse(e.line) as Record<string, unknown>);
+      expect(events).toContainEqual(
+        expect.objectContaining({ event: 'rag.load_failed', error: 'NEO4J_PASSWORD is empty' }),
+      );
+      const res = await fetch(new URL('/api/client-log', failing.url), {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ message: 'TypeError: page broke' }),
+      });
+      expect(res.status).toBe(204);
+    } finally {
+      await failing.close();
+    }
+  });
+});
+
+describe('chat server request gate (review fix)', () => {
+  let gated: ChatServer;
+  beforeAll(async () => {
+    gated = await startChatServer({ createRag: () => toyRag(confident), lastAskFile: null });
+  });
+  afterAll(async () => {
+    await gated.close();
+  });
+
+  const clientLog = (headers: Record<string, string>, body = '{"message":"x"}') =>
+    fetch(new URL('/api/client-log', gated.url), { method: 'POST', headers, body });
+
+  /** node:http, because fetch does not let a caller set the Host header. */
+  const withHost = (host: string) =>
+    new Promise<number>((resolve, reject) => {
+      const url = new URL(gated.url);
+      const req = httpRequest(
+        { hostname: url.hostname, port: url.port, path: '/api/status', headers: { host } },
+        (res) => {
+          res.resume();
+          resolve(res.statusCode ?? 0);
+        },
+      );
+      req.on('error', reject);
+      req.end();
+    });
+
+  it('rejects a POST from another origin', async () => {
+    const res = await clientLog({
+      'content-type': 'application/json',
+      origin: 'http://evil.example',
+    });
+    expect(res.status).toBe(403);
+    expect(((await res.json()) as { kind: string }).kind).toBe('forbidden');
+  });
+
+  it('rejects a cross-site POST flagged by the browser', async () => {
+    const res = await clientLog({
+      'content-type': 'application/json',
+      'sec-fetch-site': 'cross-site',
+    });
+    expect(res.status).toBe(403);
+  });
+
+  it('rejects a POST that is not JSON (the no-preflight form)', async () => {
+    const res = await clientLog({ 'content-type': 'text/plain' });
+    expect(res.status).toBe(415);
+  });
+
+  it('rejects a request for a foreign Host (DNS rebinding)', async () => {
+    expect(await withHost('evil.example')).toBe(403);
+    expect(await withHost(`127.0.0.1:${new URL(gated.url).port}`)).toBe(200);
+    expect(await withHost(`localhost:${new URL(gated.url).port}`)).toBe(200);
+  });
+
+  it('accepts a same-origin POST from the page', async () => {
+    const origin = gated.url.replace(/\/$/, '');
+    const res = await clientLog({
+      'content-type': 'application/json',
+      origin,
+      'sec-fetch-site': 'same-origin',
+    });
+    expect(res.status).toBe(204);
+  });
+});
+
+describe('server errors reach the error panel (review fix)', () => {
+  it('logs an HTTP 5xx at error level, plus ask.failed', async () => {
+    const sent: TransportEntry[] = [];
+    const logger = createLogger({
+      labels: { service: 'rag-chat' },
+      transport: { send: (e) => sent.push(e), close: async () => {} },
+      sink: () => {},
+    });
+    const broken = await startChatServer({
+      createRag: async () => {
+        const rag = await toyRag(confident);
+        rag.ask = async () => {
+          throw new Error('boom');
+        };
+        return rag;
+      },
+      lastAskFile: null,
+      logger,
+    });
+    try {
+      const { status } = await post<{ kind: string }>(broken, '/api/ask', { question: 'Q?' });
+      expect(status).toBe(500);
+      const entries = sent.map((e) => ({ level: e.labels.level, ...JSON.parse(e.line) }));
+      await expect
+        .poll(
+          () =>
+            entries.length &&
+            sent
+              .map((e) => ({ level: e.labels.level, ...JSON.parse(e.line) }))
+              .find((e) => e.event === 'http.request' && e.status === 500),
+        )
+        .toMatchObject({ level: 'error', route: '/api/ask' });
+      expect(entries.find((e) => e.event === 'ask.failed')).toMatchObject({
+        level: 'error',
+        question: 'Q?',
+      });
+    } finally {
+      await broken.close();
+    }
+  });
+});
+
+describe('chat server bind address (review fix)', () => {
+  it('reports the address it actually listens on', async () => {
+    const s = await startChatServer({
+      createRag: () => Promise.reject(new Error('not needed')),
+      lastAskFile: null,
+    });
+    try {
+      expect(s.address()).toEqual({ host: '127.0.0.1', port: Number(new URL(s.url).port) });
+    } finally {
+      await s.close();
+    }
   });
 });

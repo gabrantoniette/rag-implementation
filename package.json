@@ -11,6 +11,9 @@
   "scripts": {
     "db:up": "docker compose up -d --wait",
     "db:down": "docker compose down",
+    "obs:up": "node scripts/tsx.mjs src/cli/obs.ts up",
+    "obs:down": "node scripts/tsx.mjs src/cli/obs.ts down",
+    "obs:token": "node scripts/tsx.mjs src/cli/obs-token.ts",
     "ingest:fetch": "node scripts/tsx.mjs src/cli/ingest-fetch.ts",
     "ingest:build": "node scripts/tsx.mjs src/cli/ingest-build.ts",
     "docs": "node scripts/tsx.mjs src/cli/docs.ts",
@@ -21,7 +24,7 @@
     "feedback": "node scripts/tsx.mjs src/cli/feedback.ts",
     "eval:retrieval": "node scripts/tsx.mjs src/cli/eval-retrieval.ts",
     "evidence": "node scripts/tsx.mjs src/cli/evidence.ts",
-    "record:build": "node scripts/tsx.mjs src/cli/record-build.ts",
+    "mcp:eval": "node scripts/tsx.mjs src/cli/mcp-eval.ts",
     "scan:secrets": "node scripts/tsx.mjs src/cli/scan-secrets.ts",
     "lint": "eslint . && prettier --check .",
     "typecheck": "tsc --noEmit",
@@ -42,6 +45,8 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
+    "@playwright/mcp": "0.0.84",
     "@types/node": "26.6.6",
     "eslint": "10.13.0",
     "jszip": "3.10.2",

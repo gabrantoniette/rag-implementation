@@ -5,8 +5,13 @@
 node_modules/
 .cache/
 
-# Neo4j bind mount
+# Neo4j, Loki and Grafana bind mounts
 .neo4j-data/
+.loki-data/
+.grafana-data/
+
+# Playwright MCP output (snapshots, screenshots)
+.playwright-mcp/
 
 # Runtime data
 data/raw/

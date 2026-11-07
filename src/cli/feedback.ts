@@ -1,6 +1,8 @@
 import { existsSync, readFileSync } from 'node:fs';
+import { loadConfig } from '../core/config.js';
 import { appendFeedback } from '../core/feedback.js';
 import { PATHS } from '../core/paths.js';
+import { createAppLogger } from '../logging.js';
 import { parseArgs, runCli } from './args.js';
 
 /**
@@ -33,6 +35,14 @@ runCli(async () => {
     rating,
     at: new Date().toISOString(),
   });
+  const logger = createAppLogger(loadConfig(), 'rag-cli');
+  logger.info('feedback saved', {
+    event: 'feedback.saved',
+    rating,
+    question: last.question,
+    cited: last.citations.length,
+  });
+  await logger.close?.();
   process.stdout.write(
     `Recorded '${rating}' for: ${last.question} (${last.citations.length} cited chunks)\n`,
   );

@@ -7,6 +7,8 @@ import path from 'node:path';
 import { z } from 'zod';
 import { MODES, type Mode } from '../core/chain.js';
 import { ConfigError, LlmHttpError, QuotaExceededError } from '../core/errors.js';
+import { askEventFields } from '../core/events.js';
+import type { Logger } from '../core/logger.js';
 import { PATHS, projectPath } from '../core/paths.js';
 import type { AskResult } from '../core/rag.js';
 import type { RagInstance } from '../index.js';
@@ -37,6 +39,19 @@ const CompareSchema = AskSchema.pick({ question: true, history: true, collection
 
 const FeedbackSchema = z.object({ id: z.string().uuid(), rating: z.enum(['up', 'down']) });
 
+/** An error report from the page (window.onerror / unhandledrejection in web/app.js). */
+const ClientLogSchema = z.object({
+  message: z.string().min(1).max(2000),
+  source: z.string().max(500).optional(),
+  line: z.number().int().nonnegative().optional(),
+  column: z.number().int().nonnegative().optional(),
+  stack: z.string().max(8000).optional(),
+  page: z.string().max(200).optional(),
+});
+
+/** Client error reports accepted per rolling minute, across all pages. */
+const CLIENT_LOGS_PER_MINUTE = 30;
+
 const STATIC: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -60,7 +75,17 @@ const CSP = [
 
 export interface ErrorBody {
   error: string;
-  kind: 'input' | 'no-key' | 'quota' | 'llm' | 'store' | 'config' | 'not-found' | 'internal';
+  kind:
+    | 'input'
+    | 'no-key'
+    | 'quota'
+    | 'llm'
+    | 'store'
+    | 'config'
+    | 'not-found'
+    | 'rate-limit'
+    | 'forbidden'
+    | 'internal';
   hint?: string;
 }
 
@@ -112,6 +137,40 @@ export function describeError(error: unknown): { status: number; body: ErrorBody
       },
     };
   return { status: 500, body: { error: e?.message ?? String(error), kind: 'internal' } };
+}
+
+/**
+ * Only the chat page itself may use the API. Any website the user has open could otherwise POST
+ * to 127.0.0.1 (a "simple" text/plain request needs no CORS preflight) and spend quota or write
+ * log lines that an agent later reads through the Grafana MCP. Checks, in order:
+ * - Host is 127.0.0.1:<port> or localhost:<port> (blocks DNS rebinding), on every request;
+ * - on POST: Origin, when sent, is this server's own origin; Sec-Fetch-Site, when sent, is
+ *   same-origin or none; and the body is declared as application/json.
+ */
+export function requestGate(
+  req: IncomingMessage,
+  port: number,
+): { status: number; body: ErrorBody } | null {
+  const forbidden = (error: string) => ({
+    status: 403,
+    body: { error, kind: 'forbidden' as const },
+  });
+  const hosts = [`127.0.0.1:${port}`, `localhost:${port}`];
+  if (!hosts.includes((req.headers.host ?? '').toLowerCase()))
+    return forbidden('Unknown Host header; open the page at http://127.0.0.1.');
+  if (req.method !== 'POST') return null;
+  const origin = req.headers.origin;
+  if (origin !== undefined && !hosts.some((h) => origin.toLowerCase() === `http://${h}`))
+    return forbidden('Cross-origin requests are not accepted.');
+  const site = req.headers['sec-fetch-site'];
+  if (site !== undefined && site !== 'same-origin' && site !== 'none')
+    return forbidden('Cross-site requests are not accepted.');
+  if (!(req.headers['content-type'] ?? '').toLowerCase().startsWith('application/json'))
+    return {
+      status: 415,
+      body: { error: 'Send the request body as application/json.', kind: 'input' },
+    };
+  return null;
 }
 
 async function readJson(req: IncomingMessage, limit = 64 * 1024): Promise<unknown> {
@@ -183,10 +242,14 @@ export interface ChatServerOptions {
   lastAskFile?: string | null;
   /** Results kept in memory for feedback, newest last. */
   keepResults?: number;
+  /** Where request, ask and browser events go; defaults to the library's logger once loaded. */
+  logger?: Logger;
 }
 
 export interface ChatServer {
   url: string;
+  /** The address the socket is bound to, read from the socket itself (not from the URL). */
+  address(): { host: string; port: number };
   close(): Promise<void>;
 }
 
@@ -199,14 +262,32 @@ export async function startChatServer(options: ChatServerOptions): Promise<ChatS
   let ragPromise: Promise<RagInstance> | null = null;
   let lastModel: string | null = null;
   let queue: Promise<unknown> = Promise.resolve();
+  let ragLogger: Logger | null = null;
+  const clientLogTimes: number[] = [];
 
   const getRag = () => {
-    ragPromise ??= options.createRag().catch((error: unknown) => {
-      ragPromise = null;
-      throw error;
-    });
+    ragPromise ??= options
+      .createRag()
+      .then((rag) => {
+        ragLogger = rag.logger;
+        return rag;
+      })
+      .catch((error: unknown) => {
+        ragPromise = null;
+        // Only an injected logger can report this: the library's own never came to exist.
+        log()?.error('library failed to load', {
+          event: 'rag.load_failed',
+          error: describeError(error).body.error,
+        });
+        throw error;
+      });
     return ragPromise;
   };
+
+  /** The injected logger, else the library's (null until the library has loaded). */
+  function log(): Logger | null {
+    return options.logger ?? ragLogger;
+  }
 
   /** The embedder and TF.js models are single-threaded: run library calls one at a time. */
   const serial = <T>(task: () => Promise<T>): Promise<T> => {
@@ -271,7 +352,9 @@ export async function startChatServer(options: ChatServerOptions): Promise<ChatS
       mkdirSync(path.dirname(lastAskFile), { recursive: true });
       writeFileSync(lastAskFile, JSON.stringify(serializableState(result.state), null, 2));
     }
-    return answerView(remember(result), result, {
+    const id = remember(result);
+    log()?.info('ask completed', askEventFields(result, { source: 'chat', id }));
+    return answerView(id, result, {
       retrievalOnly: input.retrievalOnly,
       refusal: refusalText(rag),
       parameters: rag.config.parameters,
@@ -316,15 +399,63 @@ export async function startChatServer(options: ChatServerOptions): Promise<ChatS
     res.end(body);
   }
 
+  async function clientLog(input: z.infer<typeof ClientLogSchema>) {
+    const logger = log() ?? (await getRag()).logger;
+    (logger.with?.({ service: 'rag-browser' }) ?? logger).warn('browser error', {
+      event: 'browser.error',
+      ...input,
+    });
+  }
+
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? '/', 'http://127.0.0.1');
     const route = `${req.method} ${url.pathname}`;
+    const started = performance.now();
+    let askQuestion: string | undefined;
+    const gate = requestGate(req, (server.address() as AddressInfo).port);
+    if (gate) {
+      log()?.warn('request refused', {
+        event: 'http.refused',
+        method: req.method,
+        route: url.pathname,
+        status: gate.status,
+        reason: gate.body.error,
+      });
+      return send(res, gate.status, gate.body);
+    }
+    res.on('finish', () => {
+      // A server error counts in the dashboard's "Errors per minute" panel (level="error").
+      const level = res.statusCode >= 500 ? 'error' : 'info';
+      log()?.[level]('http request', {
+        event: 'http.request',
+        method: req.method,
+        route: url.pathname,
+        status: res.statusCode,
+        ms: Math.round(performance.now() - started),
+      });
+    });
     const handle = async () => {
       switch (route) {
         case 'GET /api/status':
           return send(res, 200, await status());
-        case 'POST /api/ask':
-          return send(res, 200, await ask(parse(AskSchema, await readJson(req))));
+        case 'POST /api/ask': {
+          const input = parse(AskSchema, await readJson(req));
+          askQuestion = input.question;
+          return send(res, 200, await ask(input));
+        }
+        case 'POST /api/client-log': {
+          const now = Date.now();
+          while (clientLogTimes.length && now - clientLogTimes[0]! > 60_000) clientLogTimes.shift();
+          if (clientLogTimes.length >= CLIENT_LOGS_PER_MINUTE)
+            throw new HttpError(429, {
+              error: 'Too many client error reports; try again in a minute.',
+              kind: 'rate-limit',
+            });
+          clientLogTimes.push(now);
+          await clientLog(parse(ClientLogSchema, await readJson(req, 16 * 1024)));
+          res.writeHead(204, { 'cache-control': 'no-store' });
+          return res.end();
+        }
         case 'POST /api/compare':
           return send(res, 200, await compare(parse(CompareSchema, await readJson(req))));
         case 'POST /api/feedback': {
@@ -337,6 +468,13 @@ export async function startChatServer(options: ChatServerOptions): Promise<ChatS
             });
           const rag = await getRag();
           await rag.feedback(result, input.rating);
+          log()?.info('feedback saved', {
+            event: 'feedback.saved',
+            id: input.id,
+            rating: input.rating,
+            question: result.state.question,
+            cited: result.state.citations.length,
+          });
           return send(res, 200, { saved: true, rating: input.rating });
         }
         default:
@@ -348,6 +486,13 @@ export async function startChatServer(options: ChatServerOptions): Promise<ChatS
     handle().catch((error: unknown) => {
       const { status: code, body } = describeError(error);
       if (code >= 500) process.stderr.write(`[chat] ${route}: ${body.error}\n`);
+      if (code >= 500 && askQuestion !== undefined)
+        log()?.error('ask failed', {
+          event: 'ask.failed',
+          kind: body.kind,
+          error: body.error,
+          question: askQuestion,
+        });
       if (!res.headersSent) send(res, code, body);
       else res.end();
     });
@@ -360,6 +505,10 @@ export async function startChatServer(options: ChatServerOptions): Promise<ChatS
   const { port } = server.address() as AddressInfo;
   return {
     url: `http://127.0.0.1:${port}/`,
+    address() {
+      const bound = server.address() as AddressInfo;
+      return { host: bound.address, port: bound.port };
+    },
     async close() {
       await new Promise<void>((resolve) => server.close(() => resolve()));
       if (ragPromise) await (await ragPromise.catch(() => null))?.close();

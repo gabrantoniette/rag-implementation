@@ -63,6 +63,14 @@ export class QuotaGuard {
       const waitMs = 60_000 - (this.now() - data.recent[0]!) + 50;
       this.o.logger.warn(
         `Rate limit: waiting ${Math.ceil(waitMs / 1000)} s (${this.o.perMinute}/min)`,
+        {
+          event: 'quota.warning',
+          kind: 'per-minute',
+          used: data.count,
+          warnAt: this.o.warnAt,
+          blockAt: this.o.blockAt,
+          waitMs,
+        },
       );
       await (this.o.wait ?? sleep)(waitMs);
       data = this.read();
@@ -74,6 +82,13 @@ export class QuotaGuard {
     if (data.count >= this.o.warnAt) {
       this.o.logger.warn(
         `Free-model usage today: ${data.count} requests (blocking at ${this.o.blockAt})`,
+        {
+          event: 'quota.warning',
+          kind: 'daily',
+          used: data.count,
+          warnAt: this.o.warnAt,
+          blockAt: this.o.blockAt,
+        },
       );
     }
   }

@@ -2,24 +2,25 @@ import { spawnSync } from 'node:child_process';
 import { loadConfig } from '../core/config.js';
 import { PROJECT_ROOT } from '../core/paths.js';
 import { runCli } from './args.js';
+import { SECRET_PATTERNS as PATTERNS } from './secret-patterns.js';
 
 export const GITLEAKS_IMAGE = 'zricethezav/gitleaks:v8.30.1';
 
-const PATTERNS: [string, RegExp][] = [
-  ['openrouter-key', /sk-or-v\d-[0-9a-f]{20,}/i],
-  ['private-key', /-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----/],
-  ['aws-access-key', /\bAKIA[0-9A-Z]{16}\b/],
-  ['bearer-token', /Bearer\s+[A-Za-z0-9._~+/-]{24,}/],
-  [
-    'assigned-secret',
-    /\b(?:api[_-]?key|secret|password|passwd|token)\b\s*[:=]\s*['"][^'"\s]{12,}['"]/i,
-  ],
-  ['email', /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/],
+/** Emails that are not personal data: example domains and the commit co-author trailer. */
+/**
+ * Fake values that unit tests use on purpose, allowed only in FIXTURE_PATHS. Built by joining
+ * parts so this file itself never contains a credential-shaped literal.
+ */
+const TEST_FIXTURE_VALUES = [
+  'my-neo4j-password',
+  ['glsa', 'ABCDEFGHIJKLMNOPQRSTUVWX', '1234'].join('_'),
 ];
 
-/** Emails that are not personal data: example domains and the commit co-author trailer. */
-/** Fake values that unit tests use on purpose (only allowed inside tests/). */
-const TEST_FIXTURE_VALUES = ['my-neo4j-password'];
+/**
+ * Where fixture values may appear: tests, plans (they quote the tests they ask for) and this
+ * scanner (an older commit declared the fake token here as a literal; see .gitleaksignore).
+ */
+const FIXTURE_PATHS = ['tests/', 'docs/superpowers/plans/', 'src/cli/scan-secrets.ts'];
 
 const EMAIL_ALLOWLIST = [/@example\.(?:org|com|net)$/i, /^noreply@anthropic\.com$/i];
 
@@ -44,7 +45,8 @@ const mask = (s: string) => (s.length <= 6 ? '***' : `${s.slice(0, 3)}***${s.sli
 function scanText(text: string, where: string, literals: string[], findings: Finding[]) {
   let file = where; // history diffs: the current file comes from the '+++ b/<path>' headers
   const fixture = (value: string) =>
-    file.startsWith('tests/') && TEST_FIXTURE_VALUES.some((v) => value.includes(v));
+    FIXTURE_PATHS.some((p) => file.startsWith(p)) &&
+    TEST_FIXTURE_VALUES.some((v) => value.includes(v));
   text.split('\n').forEach((line, i) => {
     if (line.startsWith('+++ b/')) file = line.slice(6);
     for (const [rule, re] of PATTERNS) {

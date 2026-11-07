@@ -1,0 +1,4 @@
+# Findings reviewed and accepted (format: commit:file:rule:line).
+# A fake Grafana token used by unit tests, declared as a literal in the scanner's allowlist; it was
+# never a real credential. The current file builds the value without a literal.
+ed386897f7665072a3b594316847f0d99595b258:src/cli/scan-secrets.ts:generic-api-key:11

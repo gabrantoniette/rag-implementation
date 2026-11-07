@@ -1,4 +1,6 @@
+import { loadConfig } from '../core/config.js';
 import { createRag } from '../index.js';
+import { createAppLogger } from '../logging.js';
 import { startChatServer } from '../web/server.js';
 import { flagNumber, parseArgs, runCli } from './args.js';
 
@@ -14,7 +16,14 @@ runCli(async () => {
     process.stderr.write('Usage: npm run chat -- [--port 4317]\n');
     return 1;
   }
-  const server = await startChatServer({ createRag: () => createRag(), port });
+  // One logger for the server and the library, created before the library loads, so a failed
+  // start (Neo4j down, empty password) still reaches Loki. This command owns it and closes it.
+  const logger = createAppLogger(loadConfig(), 'rag-chat');
+  const server = await startChatServer({
+    createRag: () => createRag({ service: 'rag-chat', logger }),
+    port,
+    logger,
+  });
   process.stdout.write(`Chat page: ${server.url}\nPress Ctrl+C to stop.\n`);
   await new Promise<void>((resolve) => {
     const stop = () => resolve();
@@ -22,5 +31,6 @@ runCli(async () => {
     process.once('SIGTERM', stop);
   });
   await server.close();
+  await logger.close?.();
   return 0;
 });

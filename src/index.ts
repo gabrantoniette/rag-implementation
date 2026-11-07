@@ -12,10 +12,10 @@ import { QuotaGuard } from './adapters/quota.js';
 import { TfjsIntentClassifier, TfjsReranker, currentVersion } from './adapters/tfjs.js';
 import { createModelTokenCounter } from './adapters/tokenizer.js';
 import { WhisperRecognizer } from './adapters/whisper.js';
-import { type AppConfig, loadConfig, secretValues } from './core/config.js';
+import { type AppConfig, loadConfig } from './core/config.js';
 import { ConfigError } from './core/errors.js';
 import { normalizeUri } from './core/hash.js';
-import { type Logger, createLogger } from './core/logger.js';
+import type { Logger } from './core/logger.js';
 import { PATHS } from './core/paths.js';
 import type {
   Embedder,
@@ -29,6 +29,7 @@ import { type Rag, buildRag } from './core/rag.js';
 import type { VectorGraphStore } from './core/store.js';
 import type { TokenCounter } from './core/tokens.js';
 import { createRegistry } from './loaders/index.js';
+import { createAppLogger } from './logging.js';
 import type { LoaderContext } from './loaders/types.js';
 import { fetchArticle, saveArticle, wikimediaUserAgent } from './loaders/wikipedia-fetch.js';
 import { LazyCaptioner } from './vision/captioner.js';
@@ -51,6 +52,8 @@ export const CreateRagConfigSchema = z.object({
   entityExtractor: custom<EntityExtractor>().optional(),
   /** Video keyframe analysis (default true). */
   visual: z.boolean().default(true),
+  /** service label on log lines shipped to Loki (when LOKI_URL is set). */
+  service: z.enum(['rag-cli', 'rag-chat']).default('rag-cli'),
   logger: custom<Logger>().optional(),
 });
 export type CreateRagConfig = z.input<typeof CreateRagConfigSchema>;
@@ -106,8 +109,7 @@ export async function createRag(input: CreateRagConfig = {}): Promise<RagInstanc
     ...(options.domainDir ? { domainDir: options.domainDir } : {}),
   });
   const { env, parameters, domain } = config;
-  const logger =
-    options.logger ?? createLogger({ level: env.LOG_LEVEL, secrets: secretValues(env) });
+  const logger = options.logger ?? createAppLogger(config, options.service);
 
   let store: VectorGraphStore;
   if (options.store === 'memory') store = new InMemoryStore();
@@ -231,7 +233,23 @@ export async function createRag(input: CreateRagConfig = {}): Promise<RagInstanc
       await Promise.allSettled([ocr.close(), captioner.close(), ner.close(), asr.close()]);
     },
   });
-  return { ...rag, config, store, embedder, logger, reranker, intent, llm };
+  // Whoever creates a logger closes it: only the one built here (with its Loki transport) is
+  // closed, last, so lines logged while closing still ship. A caller's own logger is left open.
+  const ownsLogger = options.logger === undefined;
+  return {
+    ...rag,
+    async close() {
+      await rag.close();
+      if (ownsLogger) await logger.close?.();
+    },
+    config,
+    store,
+    embedder,
+    logger,
+    reranker,
+    intent,
+    llm,
+  };
 }
 
 export type { Rag, AskOptions, AskResult } from './core/rag.js';

@@ -38,6 +38,18 @@ Lookup date for all rows: 2026-10-29.
 Fallback-only packages (mammoth, read-excel-file) are NOT installed unless officeparser fails a
 P3 acceptance check; any such addition is recorded below with the reason.
 
+## Observability and MCP (looked up 2026-11-05)
+
+See `docs/OBSERVABILITY.md`. Docker image tags were checked on Docker Hub on 2026-11-06.
+
+| Component                    | Version | context7 id                          | Used for                                                                                                                                  |
+| ---------------------------- | ------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| @modelcontextprotocol/client | 2.4.0   | /modelcontextprotocol/typescript-sdk | MCP client of `npm run mcp:eval` (`Client`, `StdioClientTransport` from `/stdio`), dev only                                               |
+| @playwright/mcp              | 0.0.84  | /microsoft/playwright-mcp            | Playwright MCP server, started by `scripts/mcp-playwright.mjs`; uses the installed Google Chrome; dev only                                |
+| grafana/mcp-grafana (image)  | 2.1.1   | /grafana/mcp-grafana                 | Grafana MCP server, `-t stdio --disable-write`; the disabled categories come from this image's own `--help` (newer flags are not assumed) |
+| grafana/loki (image)         | 3.7.9   | /websites/grafana_loki               | Log store; distroless image (no shell), so `npm run obs:up` polls `/ready` instead of a container healthcheck                             |
+| grafana/grafana (image)      | 13.3.0  | /grafana/grafana                     | Dashboards and the Loki datasource; service account API for `npm run obs:token`                                                           |
+
 ## External programs
 
 | Program     | Status on the build machine (2026-10-29)                                                                  |

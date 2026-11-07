@@ -1,0 +1,15 @@
+### Page
+- Page URL: http://127.0.0.1:4317/
+- Page Title: Ask · rag-implementation
+### Snapshot
+```yaml
+- generic [ref=e2]:
+  - main [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]: rag-implementation
+    - heading "Ask the corpus" [level=1] [ref=e6]
+    - generic [ref=e20]:
+      - textbox "Question" [active] [ref=e25]
+      - button "Ask" [ref=e26]
+    - checkbox "Retrieval only" [ref=e31]
+```
